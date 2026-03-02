@@ -11,8 +11,17 @@ config_version=5
 [application]
 
 config/name="CS780Game"
+run/main_scene="uid://b7p8b7jhc5vls"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/mode=3
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [physics]
 
