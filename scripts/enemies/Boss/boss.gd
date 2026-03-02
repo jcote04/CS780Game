@@ -7,8 +7,11 @@ extends Node2D
 @export var move_speed := 1.5
 @export var attack_color := Color(1, 0, 0, 0.8)
 @export var warn_color := Color(1, 1, 0, 0.4)
+@export var idle_duration := 2.0
+@export var attack_duration := 0.5
 @export var attack_width := 40.0
 @export var attack_length := 800.0
+@export var blink_duration := 0.2
 
 var player_node
 var attack_rect: ColorRect
@@ -16,10 +19,7 @@ var boss_visual: ColorRect
 
 var state := "idle"
 var timer := 0.0
-var idle_duration := 2.0
-var blink_duration := 0.3
 var blink_count := 0
-var attack_duration := 0.5
 
 var angle := 0.0
 var current_speed := 1.5

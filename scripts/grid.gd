@@ -1,11 +1,12 @@
 extends Node2D
 
-@export var rows := 3
+@export var rows := 4
 @export var cols := 4
 @export var font_size := 32
 @export var cell_size := Vector2(120, 120)
 @export var cell_spacing := Vector2(20, 20)
-@export var letters := [
+@export var cell_chars := [
+	"1","2","3","4",
 	"Q","W","E","R",
 	"A","S","D","F",
 	"Z","X","C","V"
@@ -37,7 +38,7 @@ func _ready():
 
 			# Add Label
 			var label = Label.new()
-			label.text = letters[index]
+			label.text = cell_chars[index]
 			label.size = cell_size
 			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -45,7 +46,6 @@ func _ready():
 			label.size_flags_vertical = Control.SIZE_FILL
 			
 			# Font
-			var font = label.get_theme_font("font")
 			label.add_theme_font_size_override("font_size", font_size)
 			
 			cell.add_child(label)

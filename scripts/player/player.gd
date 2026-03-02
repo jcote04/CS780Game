@@ -9,9 +9,10 @@ var target_position: Vector2
 var moving := false
 
 var key_map = {
-	KEY_Q: 0, KEY_W: 1, KEY_E: 2, KEY_R: 3,
-	KEY_A: 4, KEY_S: 5, KEY_D: 6, KEY_F: 7,
-	KEY_Z: 8, KEY_X: 9, KEY_C: 10, KEY_V: 11
+	KEY_1: 0, KEY_2: 1, KEY_3: 2, KEY_4: 3,
+	KEY_Q: 4, KEY_W: 5, KEY_E: 6, KEY_R: 7,
+	KEY_A: 8, KEY_S: 9, KEY_D: 10, KEY_F: 11,
+	KEY_Z: 12, KEY_X: 13, KEY_C: 14, KEY_V: 15
 }
 
 func _ready():
