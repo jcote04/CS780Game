@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://cmhugeq74naru"]
+
+[ext_resource type="Script" uid="uid://cmcrjye3osxhp" path="res://scripts/managers/main_menu.gd" id="1_sd5it"]
+
+[node name="Main Menu" type="Node2D" unique_id=395388207]
+script = ExtResource("1_sd5it")
+
+[node name="Button_manager" type="Control" parent="." unique_id=415719536]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Start" type="Button" parent="Button_manager" unique_id=727541040]
+layout_mode = 0
+offset_left = 512.0
+offset_top = 216.0
+offset_right = 768.0
+offset_bottom = 298.0
+theme_override_font_sizes/font_size = 32
+text = "Start
+"
+
+[node name="Shop" type="Button" parent="Button_manager" unique_id=827162498]
+layout_mode = 0
+offset_left = 512.0
+offset_top = 312.0
+offset_right = 768.0
+offset_bottom = 394.0
+theme_override_font_sizes/font_size = 32
+text = "Shop"
+
+[node name="Options" type="Button" parent="Button_manager" unique_id=1579786349]
+layout_mode = 0
+offset_left = 512.0
+offset_top = 408.0
+offset_right = 768.0
+offset_bottom = 490.0
+theme_override_font_sizes/font_size = 32
+text = "Options"
+
+[node name="Quit" type="Button" parent="Button_manager" unique_id=1100778491]
+layout_mode = 0
+offset_left = 512.0
+offset_top = 504.0
+offset_right = 768.0
+offset_bottom = 586.0
+theme_override_font_sizes/font_size = 32
+text = "Quit"
+
+[connection signal="pressed" from="Button_manager/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="Button_manager/Shop" to="." method="_on_shop_pressed"]
+[connection signal="pressed" from="Button_manager/Options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="Button_manager/Quit" to="." method="_on_quit_pressed"]

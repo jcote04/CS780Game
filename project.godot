@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="CS780Game"
-run/main_scene="uid://b7p8b7jhc5vls"
+run/main_scene="uid://cmhugeq74naru"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
