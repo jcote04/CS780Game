@@ -11,6 +11,15 @@ extends Node2D
 	"A","S","D","F",
 	"Z","X","C","V"
 ]
+@export var quadrants = [
+		[0,1,4,5],
+		[2,3,6,7],
+		[8,9,12,13],
+		[10,11,14,15]
+	]
+
+var cells := []
+var disabled_cells := {}
 
 func _ready():
 	position = get_viewport().get_visible_rect().size / 2
@@ -26,6 +35,7 @@ func _ready():
 		for x in range(cols):
 			# Create ColorRect
 			var cell = ColorRect.new()
+			cells.append(cell)
 			cell.color = Color(0.2, 0.2, 0.2)  # dark gray
 			cell.size = cell_size
 			add_child(cell)
@@ -51,3 +61,19 @@ func _ready():
 			cell.add_child(label)
 
 			index += 1
+
+
+func disable_quadrant(q: int):
+	var selected = quadrants[q]
+
+	for i in selected:
+		if cells[i]:
+			cells[i].color = Color(0.6,0,0)
+			disabled_cells[i] = true
+
+	await get_tree().create_timer(5).timeout
+
+	for i in selected:
+		if cells[i]:
+			cells[i].color = Color(0.2,0.2,0.2)
+			disabled_cells.erase(i)
