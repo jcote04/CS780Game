@@ -20,6 +20,15 @@ extends Node2D
 @export var return_speed := 700.0
 @export var laser_attack_chance := 0.5   # 0.5 = 50% laser, 50% charge
 
+# Disable Grid attack
+@export var disable_duration := 5.0
+@export var disable_warn_color := Color(0.8,0,0,0.5)
+@export var disabled_color := Color(0.6,0,0)
+@export var normal_color := Color(0.2,0.2,0.2)
+@export var warn_blinks := 4
+@export var blink_time := 0.2
+@export var quadrant_disabled := false
+
 var player_node
 var grid_node
 var attack_rect: ColorRect
@@ -81,10 +90,19 @@ func _process(delta):
 					target_speed *= -1
 
 				# Pick attack
-				if randf() < laser_attack_chance:
+				var r = randf()
+
+				if r < 0.5:
 					start_laser_warning()
 				else:
 					start_charge_warning()
+
+				# Try grid attack once
+				if !quadrant_disabled and randf() < 0.25:
+					quadrant_disabled = true
+					start_disable_grid_warning()
+					await get_tree().create_timer(10).timeout
+					quadrant_disabled = false
 
 		"warn":
 			timer -= delta
@@ -116,10 +134,6 @@ func _process(delta):
 		"charge":
 			timer -= delta
 			global_position += charge_dir * charge_speed * delta
-
-			# Optional: check hit on player here
-			# if global_position.distance_to(player_node.global_position) < 40:
-			#     print("Player hit by charge")
 
 			if timer <= 0:
 				boss_visual.color = Color(0.8, 0.1, 0.1)
@@ -156,6 +170,24 @@ func start_charge_warning():
 	attack_rect.visible = false
 	boss_visual.color = Color(1.0, 0.4, 0.2)
 
+func start_disable_grid_warning():
+
+	var q = randi() % 4
+	var selected = grid_node.quadrants[q]
+
+	for b in range(warn_blinks):
+
+		for i in selected:
+			grid_node.cells[i].color = warn_color
+
+		await get_tree().create_timer(blink_time).timeout
+
+		for i in selected:
+			grid_node.cells[i].color = normal_color
+
+		await get_tree().create_timer(blink_time).timeout
+
+	grid_node.disable_quadrant(q)
 
 func update_attack_rect(color: Color):
 	var world_pos = global_position
