@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://b0ioqyw6ukxoc" path="res://scripts/grid.gd" id="1_hyk8p"]
 [ext_resource type="Script" uid="uid://wepj5l05ri0c" path="res://scripts/player/player.gd" id="2_iuonh"]
 [ext_resource type="Script" uid="uid://b7mw2xlnpbtxm" path="res://scripts/enemies/Boss/boss.gd" id="3_k2fmo"]
+[ext_resource type="Script" uid="uid://dtckdwlvuollv" path="res://scenes/main/hud.gd" id="4_l3cfh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k2fmo"]
 size = Vector2(41, 38.5)
@@ -42,3 +43,20 @@ player = NodePath("../Player")
 grid = NodePath("../Grid")
 move_speed = 2.0
 idle_duration = 1.0
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1850616728]
+script = ExtResource("4_l3cfh")
+player_path = NodePath("../Player")
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD" unique_id=171871377]
+offset_right = 220.0
+offset_bottom = 54.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/MarginContainer" unique_id=737446890]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HUD/MarginContainer/VBoxContainer" unique_id=1216035880]
+layout_mode = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="HUD/MarginContainer/VBoxContainer" unique_id=192540815]
+layout_mode = 2

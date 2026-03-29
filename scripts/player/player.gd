@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal health_changed(current: int, maximum: int)
+
 @export var grid_node: NodePath
 @export var move_speed := 500.0
 @export var max_health := 5
@@ -26,6 +28,7 @@ var key_map = {
 func _ready():
 	z_index = 1
 	health = max_health
+	emit_signal("health_changed", health, max_health)
 
 	var grid = get_node(grid_node)
 	for child in grid.get_children():
@@ -37,14 +40,12 @@ func _ready():
 	hurtbox.area_entered.connect(_on_hurtbox_area_entered)
 	hurtbox.body_entered.connect(_on_hurtbox_body_entered)
 
-
 func _input(event):
 	if event is InputEventKey and event.pressed:
 		if event.keycode in key_map:
 			current_index = key_map[event.keycode]
 			target_position = grid_positions[current_index]
 			moving = true
-
 
 func _physics_process(delta):
 	if invincible:
@@ -64,30 +65,38 @@ func _physics_process(delta):
 	else:
 		velocity = Vector2.ZERO
 
-
 func take_damage(amount: int):
 	if invincible:
 		return
 
 	health -= amount
+	if health < 0:
+		health = 0
+
 	invincible = true
 	invincible_timer = invincible_time
+
+	emit_signal("health_changed", health, max_health)
 
 	print("Player HP: ", health)
 
 	if health <= 0:
 		die()
 
+func heal(amount: int):
+	health += amount
+	if health > max_health:
+		health = max_health
+
+	emit_signal("health_changed", health, max_health)
 
 func die():
 	print("Player died")
 	queue_free()
 
-
 func _on_hurtbox_area_entered(area: Area2D):
 	if area.is_in_group("enemy_attack"):
 		take_damage(1)
-
 
 func _on_hurtbox_body_entered(body: Node):
 	if body.is_in_group("enemy"):
