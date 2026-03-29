@@ -7,6 +7,9 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k2fmo"]
 size = Vector2(41, 38.5)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l3cfh"]
+size = Vector2(41, 40)
+
 [node name="Main" type="Node2D" unique_id=921002367]
 
 [node name="Grid" type="Node2D" parent="." unique_id=1035666490]
@@ -25,6 +28,13 @@ offset_bottom = 20.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=875924440]
 shape = SubResource("RectangleShape2D_k2fmo")
+
+[node name="Hurtbox" type="Area2D" parent="Player" unique_id=127518730]
+collision_layer = 2
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Hurtbox" unique_id=1437187042]
+shape = SubResource("RectangleShape2D_l3cfh")
 
 [node name="Boss" type="Node2D" parent="." unique_id=1362549979]
 script = ExtResource("3_k2fmo")

@@ -29,6 +29,12 @@ extends Node2D
 @export var blink_time := 0.2
 @export var quadrant_disabled := false
 
+@export var contact_damage := 1
+@export var charge_hit_radius := 45.0
+
+var laser_has_hit := false
+var charge_has_hit := false
+
 var player_node
 var grid_node
 var attack_rect: ColorRect
@@ -125,6 +131,10 @@ func _process(delta):
 						boss_visual.color = Color(1.0, 0.4, 0.2)
 
 		"attack":
+			if !laser_has_hit and is_player_in_laser():
+				player_node.take_damage(contact_damage)
+				laser_has_hit = true
+
 			timer -= delta
 			if timer <= 0:
 				attack_rect.visible = false
@@ -135,10 +145,13 @@ func _process(delta):
 			timer -= delta
 			global_position += charge_dir * charge_speed * delta
 
+			if !charge_has_hit and global_position.distance_to(player_node.global_position) <= charge_hit_radius:
+				player_node.take_damage(contact_damage)
+				charge_has_hit = true
+
 			if timer <= 0:
 				boss_visual.color = Color(0.8, 0.1, 0.1)
 
-				# Return smoothly to orbit instead of snapping
 				angle = (global_position - grid_center).angle()
 				return_target = grid_center + Vector2(cos(angle), sin(angle)) * orbit_radius
 				state = "return"
@@ -150,10 +163,21 @@ func _process(delta):
 				global_position = return_target
 				state = "idle"
 				timer = idle_duration
+				
+func is_player_in_laser() -> bool:
+	var dir = (locked_player_pos - global_position).normalized()
+	var to_player = player_node.global_position - global_position
 
+	var forward_dist = to_player.dot(dir)
+	var side_dist = abs(to_player.dot(dir.orthogonal()))
+
+	return forward_dist >= 0.0 \
+		and forward_dist <= attack_length \
+		and side_dist <= attack_width * 0.5
 
 func start_laser_warning():
 	attack_type = "laser"
+	laser_has_hit = false
 	state = "warn"
 	blink_count = 0
 	timer = blink_duration
@@ -163,6 +187,7 @@ func start_laser_warning():
 
 func start_charge_warning():
 	attack_type = "charge"
+	charge_has_hit = false
 	locked_player_pos = player_node.global_position
 	charge_dir = (locked_player_pos - global_position).normalized()
 	state = "charge"
@@ -199,3 +224,4 @@ func update_attack_rect(color: Color):
 	attack_rect.position = Vector2(0, -attack_width / 2)
 	attack_rect.pivot_offset = Vector2(0, attack_width / 2)
 	attack_rect.rotation = attack_angle
+	
