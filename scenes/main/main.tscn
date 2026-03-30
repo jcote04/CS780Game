@@ -17,6 +17,8 @@ size = Vector2(41, 40)
 script = ExtResource("1_hyk8p")
 cell_size = Vector2(90, 90)
 
+[node name="Camera2D" type="Camera2D" parent="Grid" unique_id=1425661607 groups=["camera"]]
+
 [node name="Player" type="CharacterBody2D" parent="." unique_id=1225215936]
 script = ExtResource("2_iuonh")
 grid_node = NodePath("../Grid")

@@ -4,8 +4,14 @@ signal health_changed(current: int, maximum: int)
 
 @export var grid_node: NodePath
 @export var move_speed := 500.0
-@export var max_health := 5
+@export var max_health := 20
 @export var invincible_time := 0.4
+
+var audio_hurt: AudioStreamPlayer
+
+var camera: Camera2D
+var shake_strength := 17.0
+var shake_duration := 0.3
 
 var grid_positions = []
 var current_index = 5
@@ -32,13 +38,21 @@ func _ready():
 
 	var grid = get_node(grid_node)
 	for child in grid.get_children():
-		grid_positions.append(child.global_position + child.size / 2)
+		if child is ColorRect:
+			grid_positions.append(child.global_position + child.size / 2)
 
 	global_position = grid_positions[current_index]
 	target_position = global_position
 
 	hurtbox.area_entered.connect(_on_hurtbox_area_entered)
 	hurtbox.body_entered.connect(_on_hurtbox_body_entered)
+	
+	camera = get_tree().get_first_node_in_group("camera")
+	
+	audio_hurt = AudioStreamPlayer.new()
+	audio_hurt.stream = preload("res://audio/player_damage.wav")
+	audio_hurt.volume_db = -5.0
+	add_child(audio_hurt)
 
 func _input(event):
 	if event is InputEventKey and event.pressed:
@@ -77,7 +91,9 @@ func take_damage(amount: int):
 	invincible_timer = invincible_time
 
 	emit_signal("health_changed", health, max_health)
-
+	shake_camera()
+	audio_hurt.pitch_scale = randf_range(0.9, 1.1)
+	audio_hurt.play()
 	print("Player HP: ", health)
 
 	if health <= 0:
@@ -101,3 +117,17 @@ func _on_hurtbox_area_entered(area: Area2D):
 func _on_hurtbox_body_entered(body: Node):
 	if body.is_in_group("enemy"):
 		take_damage(1)
+
+func shake_camera():
+	if not camera:
+		return
+	var origin = camera.global_position
+	var tween = create_tween()
+	var steps := 6
+	for i in steps:
+		var offset = Vector2(
+			randf_range(-shake_strength, shake_strength),
+			randf_range(-shake_strength, shake_strength)
+		)
+		tween.tween_property(camera, "offset", offset, shake_duration / steps)
+	tween.tween_property(camera, "offset", Vector2.ZERO, 0.05)
