@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b7p8b7jhc5vls"]
 
 [ext_resource type="Script" uid="uid://b0ioqyw6ukxoc" path="res://scripts/grid.gd" id="1_hyk8p"]
+[ext_resource type="Texture2D" uid="uid://b0t0bku6q1j2j" path="res://assets/backgrounds/space_background.jpg" id="2_6q06x"]
 [ext_resource type="Script" uid="uid://wepj5l05ri0c" path="res://scripts/player/player.gd" id="2_iuonh"]
 [ext_resource type="Script" uid="uid://b7mw2xlnpbtxm" path="res://scripts/enemies/Boss/boss.gd" id="3_k2fmo"]
 [ext_resource type="Script" path="res://scenes/main/hud.gd" id="4_l3cfh"]
@@ -19,15 +20,23 @@ cell_size = Vector2(90, 90)
 
 [node name="Camera2D" type="Camera2D" parent="Grid" unique_id=1425661607 groups=["camera"]]
 
+[node name="TextureRect" type="TextureRect" parent="Grid" unique_id=239979487]
+z_index = -1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -960.0
+offset_top = -540.0
+offset_right = 960.0
+offset_bottom = 540.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_6q06x")
+expand_mode = 1
+
 [node name="Player" type="CharacterBody2D" parent="." unique_id=1225215936]
 script = ExtResource("2_iuonh")
 grid_node = NodePath("../Grid")
-
-[node name="ColorRect" type="ColorRect" parent="Player" unique_id=600325523]
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=875924440]
 shape = SubResource("RectangleShape2D_k2fmo")
@@ -38,6 +47,19 @@ collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Hurtbox" unique_id=1437187042]
 shape = SubResource("RectangleShape2D_l3cfh")
+
+[node name="ColorRect" type="ColorRect" parent="Player" unique_id=469976730]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Boss" type="Node2D" parent="." unique_id=1362549979]
 script = ExtResource("3_k2fmo")

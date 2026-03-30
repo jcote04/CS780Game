@@ -43,7 +43,7 @@ var audio_slam: AudioStreamPlayer2D
 var player_node
 var grid_node
 var attack_rect: ColorRect
-var boss_visual: ColorRect
+var boss_visual: Sprite2D
 
 var state := "idle"
 var attack_type := ""
@@ -81,10 +81,9 @@ func _ready():
 	target_speed = move_speed
 	timer = idle_duration
 
-	boss_visual = ColorRect.new()
-	boss_visual.size = Vector2(60, 60)
-	boss_visual.color = Color(0.8, 0.1, 0.1)
-	boss_visual.position = -boss_visual.size / 2
+	boss_visual = Sprite2D.new()
+	boss_visual.texture = preload("res://assets/sprites/alien_boss.png")
+	boss_visual.scale = Vector2(2, 2)  # double the size
 	add_child(boss_visual)
 
 	attack_rect = ColorRect.new()
@@ -145,7 +144,7 @@ func _process(delta):
 						timer = charge_duration
 						charge_dir = (locked_player_pos - global_position).normalized()
 						attack_rect.visible = false
-						boss_visual.color = Color(1.0, 0.4, 0.2)
+						boss_visual.modulate = Color(1.0, 0.4, 0.2)
 
 		"attack":
 			if !laser_has_hit and is_player_in_laser():
@@ -167,7 +166,7 @@ func _process(delta):
 				charge_has_hit = true
 
 			if timer <= 0:
-				boss_visual.color = Color(0.8, 0.1, 0.1)
+				boss_visual.modulate = Color(1, 1, 1)
 
 				angle = (global_position - grid_center).angle()
 				return_target = grid_center + Vector2(cos(angle), sin(angle)) * orbit_radius
@@ -211,7 +210,7 @@ func start_charge_warning():
 	state = "charge"
 	timer = charge_duration
 	attack_rect.visible = false
-	boss_visual.color = Color(1.0, 0.4, 0.2)
+	boss_visual.modulate = Color(1.0, 0.4, 0.2)
 	audio_charge.pitch_scale = randf_range(0.9, 1.1)
 	audio_charge.play()
 
@@ -223,12 +222,12 @@ func start_disable_grid_warning():
 	for b in range(warn_blinks):
 
 		for i in selected:
-			grid_node.cells[i].color = warn_color
+			grid_node.cells[i].modulate = warn_color
 
 		await get_tree().create_timer(blink_time).timeout
 
 		for i in selected:
-			grid_node.cells[i].color = normal_color
+			grid_node.cells[i].modulate = normal_color
 
 		await get_tree().create_timer(blink_time).timeout
 

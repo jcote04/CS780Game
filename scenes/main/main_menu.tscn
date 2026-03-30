@@ -1,9 +1,65 @@
 [gd_scene format=3 uid="uid://cmhugeq74naru"]
 
 [ext_resource type="Script" uid="uid://cmcrjye3osxhp" path="res://scripts/managers/main_menu.gd" id="1_sd5it"]
+[ext_resource type="Texture2D" uid="uid://b0t0bku6q1j2j" path="res://assets/backgrounds/space_background.jpg" id="2_byqcc"]
+[ext_resource type="FontFile" uid="uid://cdsh8vwbf3g4w" path="res://assets/fonts/press_start.ttf" id="3_w6ykx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hiibk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_swlpu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nm0l4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bxtry"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_75pso"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cnht7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s2sug"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ygj4d"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_001j1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rf05u"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7orsx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pkvy1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1a37c"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u8x8k"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_eftjy"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d4g5q"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2srlj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uudd7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a008x"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jrhf3"]
 
 [node name="Main Menu" type="Node2D" unique_id=395388207]
 script = ExtResource("1_sd5it")
+
+[node name="Background" type="TextureRect" parent="." unique_id=2063141500]
+z_index = -1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -960.0
+offset_top = -540.0
+offset_right = 960.0
+offset_bottom = 540.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_byqcc")
+expand_mode = 1
 
 [node name="Button_manager" type="Control" parent="." unique_id=415719536]
 layout_mode = 3
@@ -17,7 +73,13 @@ offset_left = 512.0
 offset_top = 216.0
 offset_right = 768.0
 offset_bottom = 298.0
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("3_w6ykx")
+theme_override_font_sizes/font_size = 33
+theme_override_styles/normal = SubResource("StyleBoxEmpty_hiibk")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_swlpu")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_nm0l4")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_bxtry")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_75pso")
 text = "Start
 "
 
@@ -27,7 +89,13 @@ offset_left = 512.0
 offset_top = 312.0
 offset_right = 768.0
 offset_bottom = 394.0
+theme_override_fonts/font = ExtResource("3_w6ykx")
 theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxEmpty_cnht7")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_s2sug")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_ygj4d")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_001j1")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_rf05u")
 text = "Shop"
 
 [node name="Options" type="Button" parent="Button_manager" unique_id=1579786349]
@@ -36,7 +104,13 @@ offset_left = 512.0
 offset_top = 408.0
 offset_right = 768.0
 offset_bottom = 490.0
+theme_override_fonts/font = ExtResource("3_w6ykx")
 theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7orsx")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_pkvy1")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_1a37c")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_u8x8k")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_eftjy")
 text = "Options"
 
 [node name="Quit" type="Button" parent="Button_manager" unique_id=1100778491]
@@ -45,7 +119,13 @@ offset_left = 512.0
 offset_top = 504.0
 offset_right = 768.0
 offset_bottom = 586.0
+theme_override_fonts/font = ExtResource("3_w6ykx")
 theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxEmpty_d4g5q")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_2srlj")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_uudd7")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_a008x")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_jrhf3")
 text = "Quit"
 
 [connection signal="pressed" from="Button_manager/Start" to="." method="_on_start_pressed"]

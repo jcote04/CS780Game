@@ -4,7 +4,7 @@ signal health_changed(current: int, maximum: int)
 
 @export var grid_node: NodePath
 @export var move_speed := 500.0
-@export var max_health := 20
+@export var max_health := 5
 @export var invincible_time := 0.4
 
 var audio_hurt: AudioStreamPlayer
@@ -32,23 +32,33 @@ var key_map = {
 @onready var hurtbox: Area2D = $Hurtbox
 
 func _ready():
+	
+	# Sprite
+	# var sprite = Sprite2D.new()
+	# sprite.texture = preload("res://assets/sprites/space_ship.png")
+	# sprite.scale = Vector2(.2, .2)
+	# add_child(sprite)
+	
 	z_index = 1
 	health = max_health
 	emit_signal("health_changed", health, max_health)
 
 	var grid = get_node(grid_node)
 	for child in grid.get_children():
-		if child is ColorRect:
-			grid_positions.append(child.global_position + child.size / 2)
+		if child is Node2D and not child is Camera2D:
+			grid_positions.append(child.global_position)
 
 	global_position = grid_positions[current_index]
 	target_position = global_position
 
+	# Hurtbox
 	hurtbox.area_entered.connect(_on_hurtbox_area_entered)
 	hurtbox.body_entered.connect(_on_hurtbox_body_entered)
 	
+	# Camera
 	camera = get_tree().get_first_node_in_group("camera")
 	
+	# Audio
 	audio_hurt = AudioStreamPlayer.new()
 	audio_hurt.stream = preload("res://audio/player_damage.wav")
 	audio_hurt.volume_db = -5.0
