@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://b0ioqyw6ukxoc" path="res://scripts/grid.gd" id="1_hyk8p"]
 [ext_resource type="Script" uid="uid://wepj5l05ri0c" path="res://scripts/player/player.gd" id="2_iuonh"]
 [ext_resource type="Script" uid="uid://b7mw2xlnpbtxm" path="res://scripts/enemies/Boss/boss.gd" id="3_k2fmo"]
-[ext_resource type="Script" uid="uid://dtckdwlvuollv" path="res://scenes/main/hud.gd" id="4_l3cfh"]
+[ext_resource type="Script" path="res://scenes/main/hud.gd" id="4_l3cfh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k2fmo"]
 size = Vector2(41, 38.5)
@@ -43,6 +43,7 @@ player = NodePath("../Player")
 grid = NodePath("../Grid")
 move_speed = 2.0
 idle_duration = 1.0
+laser_attack_chance = 0.4
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1850616728]
 script = ExtResource("4_l3cfh")

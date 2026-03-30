@@ -35,6 +35,11 @@ extends Node2D
 var laser_has_hit := false
 var charge_has_hit := false
 
+# Audio
+var audio_laser: AudioStreamPlayer2D
+var audio_charge: AudioStreamPlayer2D
+var audio_slam: AudioStreamPlayer2D
+
 var player_node
 var grid_node
 var attack_rect: ColorRect
@@ -55,6 +60,18 @@ var return_target := Vector2.ZERO
 
 func _ready():
 	randomize()
+
+	audio_laser = AudioStreamPlayer2D.new()
+	audio_laser.stream = preload("res://audio/boss_laser.wav")
+	add_child(audio_laser)
+
+	audio_charge = AudioStreamPlayer2D.new()
+	audio_charge.stream = preload("res://audio/boss_charge.wav")
+	add_child(audio_charge)
+
+	audio_slam = AudioStreamPlayer2D.new()
+	#audio_slam.stream = preload("res://audio/boss_slam.ogg")
+	add_child(audio_slam)
 
 	player_node = get_node(player)
 	grid_node = get_node(grid)
@@ -183,6 +200,7 @@ func start_laser_warning():
 	timer = blink_duration
 	update_attack_rect(warn_color)
 	attack_rect.visible = true
+	audio_laser.play()
 
 
 func start_charge_warning():
@@ -194,6 +212,8 @@ func start_charge_warning():
 	timer = charge_duration
 	attack_rect.visible = false
 	boss_visual.color = Color(1.0, 0.4, 0.2)
+	audio_charge.pitch_scale = randf_range(0.9, 1.1)
+	audio_charge.play()
 
 func start_disable_grid_warning():
 
