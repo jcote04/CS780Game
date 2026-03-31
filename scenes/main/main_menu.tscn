@@ -2,7 +2,13 @@
 
 [ext_resource type="Script" uid="uid://cmcrjye3osxhp" path="res://scripts/managers/main_menu.gd" id="1_sd5it"]
 [ext_resource type="Texture2D" uid="uid://b0t0bku6q1j2j" path="res://assets/backgrounds/space_background.jpg" id="2_byqcc"]
+[ext_resource type="Shader" uid="uid://cajb4hbto0dg4" path="res://assets/shaders/background.gdshader" id="3_hiibk"]
 [ext_resource type="FontFile" uid="uid://cdsh8vwbf3g4w" path="res://assets/fonts/press_start.ttf" id="3_w6ykx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w6ykx"]
+shader = ExtResource("3_hiibk")
+shader_parameter/scroll_speed_x = 0.02
+shader_parameter/scroll_speed_y = 0.02
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hiibk"]
 
@@ -49,6 +55,8 @@ script = ExtResource("1_sd5it")
 
 [node name="Background" type="TextureRect" parent="." unique_id=2063141500]
 z_index = -1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_w6ykx")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

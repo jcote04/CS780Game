@@ -3,10 +3,17 @@
 [ext_resource type="Script" uid="uid://b0ioqyw6ukxoc" path="res://scripts/grid.gd" id="1_hyk8p"]
 [ext_resource type="Texture2D" uid="uid://b0t0bku6q1j2j" path="res://assets/backgrounds/space_background.jpg" id="2_6q06x"]
 [ext_resource type="Script" uid="uid://wepj5l05ri0c" path="res://scripts/player/player.gd" id="2_iuonh"]
+[ext_resource type="Shader" uid="uid://cajb4hbto0dg4" path="res://assets/shaders/background.gdshader" id="2_yyfjg"]
 [ext_resource type="Script" uid="uid://b7mw2xlnpbtxm" path="res://scripts/enemies/Boss/boss.gd" id="3_k2fmo"]
 [ext_resource type="Script" path="res://scenes/main/hud.gd" id="4_l3cfh"]
 [ext_resource type="Texture2D" uid="uid://me32ta7jabg6" path="res://assets/sprite_sheets/player_ship1.png" id="4_ow5a4"]
 [ext_resource type="Texture2D" uid="uid://cv7wls1jxnjyn" path="res://assets/sprite_sheets/boss_eyeball.png" id="6_hujxm"]
+[ext_resource type="FontFile" uid="uid://cdsh8vwbf3g4w" path="res://assets/fonts/press_start.ttf" id="9_b1x3f"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b1x3f"]
+shader = ExtResource("2_yyfjg")
+shader_parameter/scroll_speed_x = 0.02
+shader_parameter/scroll_speed_y = 0.02
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k2fmo"]
 size = Vector2(41, 38.5)
@@ -167,6 +174,9 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b1x3f"]
+bg_color = Color(0.9843137, 0, 0, 1)
+
 [sub_resource type="Environment" id="Environment_6q06x"]
 background_mode = 3
 glow_enabled = true
@@ -183,8 +193,10 @@ cell_size = Vector2(90, 90)
 
 [node name="Camera2D" type="Camera2D" parent="Grid" unique_id=1425661607 groups=["camera"]]
 
-[node name="TextureRect" type="TextureRect" parent="Grid" unique_id=239979487]
+[node name="Background" type="TextureRect" parent="Grid" unique_id=239979487]
 z_index = -1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_b1x3f")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -216,7 +228,7 @@ texture_filter = 1
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_ou6is")
 animation = &"idle"
-frame_progress = 0.3526056
+frame_progress = 0.1404233
 
 [node name="Shadow" type="AnimatedSprite2D" parent="Player/AnimatedSprite2D" unique_id=415009978]
 
@@ -224,30 +236,9 @@ frame_progress = 0.3526056
 script = ExtResource("3_k2fmo")
 player = NodePath("../Player")
 grid = NodePath("../Grid")
-grid_center = null
-orbit_radius = null
 move_speed = 2.0
-attack_color = null
-warn_color = null
 idle_duration = 1.0
-attack_duration = null
-attack_width = null
-attack_length = null
-blink_duration = null
-charge_warn_color = null
-charge_speed = null
-charge_duration = null
-return_speed = null
 laser_attack_chance = 0.4
-disable_duration = null
-disable_warn_color = null
-disabled_color = null
-normal_color = null
-warn_blinks = null
-blink_time = null
-quadrant_disabled = null
-contact_damage = null
-charge_hit_radius = null
 
 [node name="LaserLine" type="Line2D" parent="Boss" unique_id=2078727681]
 width = 24.0
@@ -262,7 +253,7 @@ texture_filter = 1
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_6llfj")
 animation = &"move"
-frame_progress = 0.7828522
+frame_progress = 0.1767002
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1850616728]
 script = ExtResource("4_l3cfh")
@@ -277,9 +268,12 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="HUD/MarginContainer/VBoxContainer" unique_id=1216035880]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("9_b1x3f")
 
 [node name="ProgressBar" type="ProgressBar" parent="HUD/MarginContainer/VBoxContainer" unique_id=192540815]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("9_b1x3f")
+theme_override_styles/fill = SubResource("StyleBoxFlat_b1x3f")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=209785228]
 environment = SubResource("Environment_6q06x")
