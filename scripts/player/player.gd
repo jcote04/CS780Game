@@ -2,8 +2,11 @@ extends CharacterBody2D
 
 signal health_changed(current: int, maximum: int)
 
+@onready var anim: AnimatedSprite2D = $AnimatedSprite2D
+@onready var shadow: AnimatedSprite2D = $AnimatedSprite2D/Shadow
+
 @export var grid_node: NodePath
-@export var move_speed := 500.0
+@export var move_speed := 400.0
 @export var max_health := 5
 @export var invincible_time := 0.4
 
@@ -34,10 +37,14 @@ var key_map = {
 func _ready():
 	
 	# Sprite
-	# var sprite = Sprite2D.new()
-	# sprite.texture = preload("res://assets/sprites/space_ship.png")
-	# sprite.scale = Vector2(.2, .2)
-	# add_child(sprite)
+	anim.play("idle")
+	
+	# Shadow
+	shadow.sprite_frames = anim.sprite_frames  
+	shadow.modulate = Color(0, 0, 0, 0.5)    
+	shadow.position = Vector2(7, 7)             
+	shadow.scale = Vector2(1, 1)               
+	shadow.z_index = -1 
 	
 	z_index = 1
 	health = max_health
@@ -57,6 +64,7 @@ func _ready():
 	
 	# Camera
 	camera = get_tree().get_first_node_in_group("camera")
+	CameraManager.init(camera)
 	
 	# Audio
 	audio_hurt = AudioStreamPlayer.new()
@@ -70,14 +78,24 @@ func _input(event):
 			current_index = key_map[event.keycode]
 			target_position = grid_positions[current_index]
 			moving = true
+			
+			# Face toward target
+			var dir = (target_position - global_position).normalized()
+			anim.rotation = dir.angle() + deg_to_rad(90)
+			
 
 func _physics_process(delta):
 	if invincible:
 		invincible_timer -= delta
 		if invincible_timer <= 0:
 			invincible = false
+			shadow.animation = anim.animation
+			shadow.frame = anim.frame          
+			shadow.rotation = 0
 
 	if moving:
+		anim.play("move")
+		shadow.visible = false
 		var direction = (target_position - global_position).normalized()
 		velocity = direction * move_speed
 		move_and_slide()
@@ -87,12 +105,19 @@ func _physics_process(delta):
 			velocity = Vector2.ZERO
 			moving = false
 	else:
+		anim.play("idle")
+		shadow.visible = true
 		velocity = Vector2.ZERO
 
 func take_damage(amount: int):
 	if invincible:
 		return
-
+	
+	# Flash red
+	anim.modulate = Color(1, 0, 0)
+	await get_tree().create_timer(0.1).timeout
+	anim.modulate = Color(1, 1, 1)
+	
 	health -= amount
 	if health < 0:
 		health = 0
@@ -101,7 +126,7 @@ func take_damage(amount: int):
 	invincible_timer = invincible_time
 
 	emit_signal("health_changed", health, max_health)
-	shake_camera()
+	CameraManager.shake(17.0, 0.3)
 	audio_hurt.pitch_scale = randf_range(0.9, 1.1)
 	audio_hurt.play()
 	print("Player HP: ", health)
@@ -127,17 +152,3 @@ func _on_hurtbox_area_entered(area: Area2D):
 func _on_hurtbox_body_entered(body: Node):
 	if body.is_in_group("enemy"):
 		take_damage(1)
-
-func shake_camera():
-	if not camera:
-		return
-	var origin = camera.global_position
-	var tween = create_tween()
-	var steps := 6
-	for i in steps:
-		var offset = Vector2(
-			randf_range(-shake_strength, shake_strength),
-			randf_range(-shake_strength, shake_strength)
-		)
-		tween.tween_property(camera, "offset", offset, shake_duration / steps)
-	tween.tween_property(camera, "offset", Vector2.ZERO, 0.05)

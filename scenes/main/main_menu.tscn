@@ -61,6 +61,20 @@ grow_vertical = 2
 texture = ExtResource("2_byqcc")
 expand_mode = 1
 
+[node name="Title" type="Label" parent="." unique_id=1960561447]
+offset_left = 432.0
+offset_top = 200.0
+offset_right = 880.0
+offset_bottom = 256.0
+theme_override_colors/font_color = Color(0.07058824, 0.5921569, 0.52156866, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_w6ykx")
+theme_override_font_sizes/font_size = 56
+text = "KeyShift"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Button_manager" type="Control" parent="." unique_id=415719536]
 layout_mode = 3
 anchors_preset = 0
@@ -70,9 +84,9 @@ offset_bottom = 40.0
 [node name="Start" type="Button" parent="Button_manager" unique_id=727541040]
 layout_mode = 0
 offset_left = 512.0
-offset_top = 216.0
+offset_top = 288.0
 offset_right = 768.0
-offset_bottom = 298.0
+offset_bottom = 370.0
 theme_override_fonts/font = ExtResource("3_w6ykx")
 theme_override_font_sizes/font_size = 33
 theme_override_styles/normal = SubResource("StyleBoxEmpty_hiibk")
@@ -86,9 +100,9 @@ text = "Start
 [node name="Shop" type="Button" parent="Button_manager" unique_id=827162498]
 layout_mode = 0
 offset_left = 512.0
-offset_top = 312.0
+offset_top = 384.0
 offset_right = 768.0
-offset_bottom = 394.0
+offset_bottom = 466.0
 theme_override_fonts/font = ExtResource("3_w6ykx")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxEmpty_cnht7")
@@ -101,9 +115,9 @@ text = "Shop"
 [node name="Options" type="Button" parent="Button_manager" unique_id=1579786349]
 layout_mode = 0
 offset_left = 512.0
-offset_top = 408.0
+offset_top = 480.0
 offset_right = 768.0
-offset_bottom = 490.0
+offset_bottom = 562.0
 theme_override_fonts/font = ExtResource("3_w6ykx")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxEmpty_7orsx")
@@ -116,9 +130,9 @@ text = "Options"
 [node name="Quit" type="Button" parent="Button_manager" unique_id=1100778491]
 layout_mode = 0
 offset_left = 512.0
-offset_top = 504.0
+offset_top = 576.0
 offset_right = 768.0
-offset_bottom = 586.0
+offset_bottom = 658.0
 theme_override_fonts/font = ExtResource("3_w6ykx")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxEmpty_d4g5q")

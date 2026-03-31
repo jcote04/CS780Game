@@ -1,5 +1,7 @@
 extends Node2D
 
+@onready var boss_anim: AnimatedSprite2D = $AnimatedSprite2D
+
 @export var player: NodePath
 @export var grid: NodePath
 @export var grid_center := Vector2(0, 0)
@@ -10,7 +12,7 @@ extends Node2D
 @export var idle_duration := 2.0
 @export var attack_duration := 0.5
 @export var attack_width := 40.0
-@export var attack_length := 800.0
+@export var attack_length := 1200.0
 @export var blink_duration := 0.2
 
 # Charge attack
@@ -32,6 +34,8 @@ extends Node2D
 @export var contact_damage := 1
 @export var charge_hit_radius := 45.0
 
+var laser_line: Line2D
+var laser_line_core: Line2D
 var laser_has_hit := false
 var charge_has_hit := false
 
@@ -42,8 +46,8 @@ var audio_slam: AudioStreamPlayer2D
 
 var player_node
 var grid_node
+
 var attack_rect: ColorRect
-var boss_visual: Sprite2D
 
 var state := "idle"
 var attack_type := ""
@@ -60,6 +64,11 @@ var return_target := Vector2.ZERO
 
 func _ready():
 	randomize()
+
+	laser_line = $LaserLine
+	laser_line_core = $LaserLineCore
+	laser_line.visible = false
+	laser_line_core.visible = false
 
 	audio_laser = AudioStreamPlayer2D.new()
 	audio_laser.stream = preload("res://audio/boss_laser.wav")
@@ -81,10 +90,7 @@ func _ready():
 	target_speed = move_speed
 	timer = idle_duration
 
-	boss_visual = Sprite2D.new()
-	boss_visual.texture = preload("res://assets/sprites/alien_boss.png")
-	boss_visual.scale = Vector2(2, 2)  # double the size
-	add_child(boss_visual)
+	boss_anim.play("idle")
 
 	attack_rect = ColorRect.new()
 	attack_rect.visible = false
@@ -102,6 +108,10 @@ func _process(delta):
 			current_speed = lerp(current_speed, target_speed, delta * 1.5)
 			angle += current_speed * delta
 			global_position = grid_center + Vector2(cos(angle), sin(angle)) * orbit_radius
+
+			# Face toward center
+			var to_center = (grid_center - global_position).normalized()
+			boss_anim.flip_h = to_center.x < 0
 
 			timer -= delta
 			if timer <= 0:
@@ -138,13 +148,19 @@ func _process(delta):
 						state = "attack"
 						timer = attack_duration
 						update_attack_rect(attack_color)
-						attack_rect.visible = true
+						attack_rect.visible = false
+						var dir = (locked_player_pos - global_position).normalized()
+						var end_point = dir * attack_length
+						CameraManager.shake(13.0, 0.5)
+						laser_line.points = [Vector2.ZERO, end_point]
+						laser_line_core.points = [Vector2.ZERO, end_point]
+						show_laser()
 					elif attack_type == "charge":
 						state = "charge"
 						timer = charge_duration
 						charge_dir = (locked_player_pos - global_position).normalized()
 						attack_rect.visible = false
-						boss_visual.modulate = Color(1.0, 0.4, 0.2)
+						boss_anim.modulate = Color(1.0, 0.4, 0.2)
 
 		"attack":
 			if !laser_has_hit and is_player_in_laser():
@@ -153,7 +169,7 @@ func _process(delta):
 
 			timer -= delta
 			if timer <= 0:
-				attack_rect.visible = false
+				hide_laser()
 				state = "idle"
 				timer = idle_duration
 
@@ -161,12 +177,14 @@ func _process(delta):
 			timer -= delta
 			global_position += charge_dir * charge_speed * delta
 
+			boss_anim.play("move")
+
 			if !charge_has_hit and global_position.distance_to(player_node.global_position) <= charge_hit_radius:
 				player_node.take_damage(contact_damage)
 				charge_has_hit = true
 
 			if timer <= 0:
-				boss_visual.modulate = Color(1, 1, 1)
+				boss_anim.modulate = Color(1, 1, 1)
 
 				angle = (global_position - grid_center).angle()
 				return_target = grid_center + Vector2(cos(angle), sin(angle)) * orbit_radius
@@ -210,7 +228,7 @@ func start_charge_warning():
 	state = "charge"
 	timer = charge_duration
 	attack_rect.visible = false
-	boss_visual.modulate = Color(1.0, 0.4, 0.2)
+	boss_anim.modulate = Color(1.0, 0.4, 0.2)
 	audio_charge.pitch_scale = randf_range(0.9, 1.1)
 	audio_charge.play()
 
@@ -244,3 +262,22 @@ func update_attack_rect(color: Color):
 	attack_rect.pivot_offset = Vector2(0, attack_width / 2)
 	attack_rect.rotation = attack_angle
 	
+
+func show_laser():
+	laser_line.visible = true
+	laser_line_core.visible = true
+	laser_line.modulate.a = 0.0
+	laser_line_core.modulate.a = 0.0
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(laser_line, "modulate:a", 1.0, 0.1)
+	tween.tween_property(laser_line_core, "modulate:a", 1.0, 0.1)
+
+func hide_laser():
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(laser_line, "modulate:a", 0.0, 0.15)
+	tween.tween_property(laser_line_core, "modulate:a", 0.0, 0.15)
+	await tween.finished
+	laser_line.visible = false
+	laser_line_core.visible = false

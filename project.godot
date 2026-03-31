@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 MusicManager="*uid://d4lugtfqxtwgo"
+CameraManager="*uid://dtrbplv06u661"
 
 [display]
 
