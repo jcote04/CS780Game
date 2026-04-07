@@ -5,6 +5,8 @@ signal health_changed(current: int, maximum: int)
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var shadow: AnimatedSprite2D = $AnimatedSprite2D/Shadow
 
+@onready var grid_ = get_node("/root/Main/Grid")
+
 @export var grid_node: NodePath
 @export var move_speed := 400.0
 @export var max_health := 5
@@ -76,6 +78,8 @@ func _input(event):
 	if event is InputEventKey and event.pressed:
 		if event.keycode in key_map:
 			current_index = key_map[event.keycode]
+			if grid_.disabled_cells.has(current_index):
+				return
 			target_position = grid_positions[current_index]
 			moving = true
 			

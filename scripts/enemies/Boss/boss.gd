@@ -22,6 +22,21 @@ extends Node2D
 @export var return_speed := 700.0
 @export var laser_attack_chance := 0.5   # 0.5 = 50% laser, 50% charge
 
+# Projectile attack
+@export var projectile_template_node: NodePath
+@export var projectile_count := 3
+@export var projectile_delay := 0.3
+@export var projectile_spread_angle := 15.0
+@export var projectile_speed := 400.0
+@export var projectile_duration := 1.0
+
+var proj_dir
+var base_angle
+var half_spread
+var proj_angle
+
+var template_projectile
+
 # Disable Grid attack
 @export var disable_duration := 5.0
 @export var disable_warn_color := Color(0.8,0,0,0.5)
@@ -48,6 +63,7 @@ var player_node
 var grid_node
 
 var attack_rect: ColorRect
+var attack_rect_projectile: ColorRect
 
 var state := "idle"
 var attack_type := ""
@@ -69,6 +85,10 @@ func _ready():
 	laser_line_core = $LaserLineCore
 	laser_line.visible = false
 	laser_line_core.visible = false
+
+	#projectile
+	template_projectile = $"../Projectile"
+	template_projectile.monitoring = false
 
 	audio_laser = AudioStreamPlayer2D.new()
 	audio_laser.stream = preload("res://audio/boss_laser.wav")
@@ -93,8 +113,13 @@ func _ready():
 	boss_anim.play("idle")
 
 	attack_rect = ColorRect.new()
+	attack_rect_projectile = ColorRect.new()
+	
 	attack_rect.visible = false
+	attack_rect_projectile.visible = false
+	
 	add_child(attack_rect)
+	add_child(attack_rect_projectile)
 
 	global_position = grid_center + Vector2.RIGHT * orbit_radius
 
@@ -124,22 +149,28 @@ func _process(delta):
 				# Pick attack
 				var r = randf()
 
-				if r < 0.5:
+				if r < 0.3:
 					start_laser_warning()
+				elif r < 0.6:
+					start_projectile_warning()
 				else:
 					start_charge_warning()
 
 				# Try grid attack once
-				if !quadrant_disabled and randf() < 0.25:
+				if !quadrant_disabled and randf() < 0.5:
 					quadrant_disabled = true
 					start_disable_grid_warning()
+					
 					await get_tree().create_timer(10).timeout
 					quadrant_disabled = false
 
 		"warn":
 			timer -= delta
 			if timer <= 0:
-				attack_rect.visible = !attack_rect.visible
+				if attack_type == "laser":
+					attack_rect.visible = !attack_rect.visible
+				if attack_type == "projectile":
+					attack_rect_projectile.visible = !attack_rect_projectile.visible
 				blink_count += 1
 				timer = blink_duration
 
@@ -161,7 +192,12 @@ func _process(delta):
 						charge_dir = (locked_player_pos - global_position).normalized()
 						attack_rect.visible = false
 						boss_anim.modulate = Color(1.0, 0.4, 0.2)
-
+					elif attack_type == "projectile":
+						state = "projectile"
+						timer = projectile_duration
+						CameraManager.shake(13.0, 0.5)
+						attack_rect_projectile.visible = false
+						await perform_projectile_burst()  # fires 3 projectiles with delay
 		"attack":
 			if !laser_has_hit and is_player_in_laser():
 				player_node.take_damage(contact_damage)
@@ -189,6 +225,12 @@ func _process(delta):
 				angle = (global_position - grid_center).angle()
 				return_target = grid_center + Vector2(cos(angle), sin(angle)) * orbit_radius
 				state = "return"
+
+		"projectile":
+			timer -= delta
+			if timer <= 0:
+				state = "idle"
+				timer = idle_duration
 
 		"return":
 			global_position = global_position.move_toward(return_target, return_speed * delta)
@@ -219,7 +261,43 @@ func start_laser_warning():
 	attack_rect.visible = true
 	audio_laser.play()
 
+func start_projectile_warning():
+	attack_type = "projectile"
+	state = "warn"
+	blink_count = 0
+	timer = blink_duration
 
+	locked_player_pos = player_node.global_position
+
+	# Clear old warning visuals
+	for child in attack_rect_projectile.get_children():
+		child.queue_free()
+
+	# Direction toward player
+	proj_dir = (locked_player_pos - global_position).normalized()
+	base_angle = proj_dir.angle()
+	half_spread = deg_to_rad(projectile_spread_angle * (projectile_count - 1) / 2)
+
+	# Create one rectangle per projectile
+	for i in range(projectile_count):
+		proj_angle = base_angle - half_spread + deg_to_rad(projectile_spread_angle * i)
+
+		var rect = ColorRect.new()
+		rect.color = warn_color
+		rect.size = Vector2(attack_length, attack_width)
+
+		# Position + rotation setup
+		rect.position = Vector2(0, -attack_width / 2)
+		rect.pivot_offset = Vector2(0, attack_width / 2)
+		rect.rotation = proj_angle
+
+		attack_rect_projectile.add_child(rect)
+
+	# Place attack_rect at boss position
+	attack_rect_projectile.global_position = global_position
+	attack_rect_projectile.visible = true
+	audio_laser.play()
+	
 func start_charge_warning():
 	attack_type = "charge"
 	charge_has_hit = false
@@ -251,6 +329,28 @@ func start_disable_grid_warning():
 
 	grid_node.disable_quadrant(q)
 
+func perform_projectile_burst():
+	template_projectile.monitoring = true
+	for i in range(projectile_count):
+		proj_angle = base_angle - half_spread + deg_to_rad(projectile_spread_angle * i)
+		var proj_dirs = Vector2(cos(proj_angle), sin(proj_angle))
+		# Duplicate the template node
+		var projectile = template_projectile.duplicate()
+		projectile.global_position = global_position
+		projectile.direction = proj_dirs
+		projectile.speed = projectile_speed
+		projectile.shooter = self
+		projectile.visible = true  # make sure the duplicated node is visible
+		get_parent().add_child(projectile)
+		
+		projectile.get_tree().create_timer(3.0).timeout.connect(func():
+			if is_instance_valid(projectile):
+				projectile.queue_free()
+		)
+		
+		# Wait before firing the next projectile
+		await get_tree().create_timer(projectile_delay).timeout
+
 func update_attack_rect(color: Color):
 	var world_pos = global_position
 	var dir = (locked_player_pos - world_pos).normalized()
@@ -261,7 +361,6 @@ func update_attack_rect(color: Color):
 	attack_rect.position = Vector2(0, -attack_width / 2)
 	attack_rect.pivot_offset = Vector2(0, attack_width / 2)
 	attack_rect.rotation = attack_angle
-	
 
 func show_laser():
 	laser_line.visible = true
