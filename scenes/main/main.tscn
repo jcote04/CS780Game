@@ -328,6 +328,7 @@ environment = SubResource("Environment_6q06x")
 [node name="GameOverScreen" type="CanvasLayer" parent="." unique_id=141587530]
 process_mode = 3
 layer = 10
+visible = false
 script = ExtResource("12_th5th")
 
 [node name="ColorRect" type="ColorRect" parent="GameOverScreen" unique_id=2001025601]

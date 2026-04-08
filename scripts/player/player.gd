@@ -79,6 +79,7 @@ func _ready():
 	audio_hurt = AudioStreamPlayer.new()
 	audio_hurt.stream = preload("res://audio/player_damage.wav")
 	audio_hurt.volume_db = -5.0
+	audio_hurt.bus = "SFX"
 	add_child(audio_hurt)
 
 func _input(event):

@@ -1,0 +1,20 @@
+[gd_resource type="Theme" format=3 uid="uid://cv0sbvdqcb15t"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3up7u"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_px86b"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_3up7u"]
+color = Color(0.14229792, 0.8379576, 0.84212565, 1)
+thickness = 4
+
+[resource]
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_3up7u")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_px86b")
+HSlider/styles/slider = SubResource("StyleBoxLine_3up7u")

@@ -10,6 +10,7 @@ func _ready():
 	hover_sound = AudioStreamPlayer.new()
 	hover_sound.stream = preload("res://audio/ui_mouse_hover.wav")
 	hover_sound.volume_db = -5.0
+	hover_sound.bus = "SFX"
 	add_child(hover_sound)
 	
 	for button in get_children():

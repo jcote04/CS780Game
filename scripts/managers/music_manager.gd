@@ -6,6 +6,7 @@ var is_fading := false
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	music_player = AudioStreamPlayer.new()
+	music_player.bus = "Music"
 	add_child(music_player)
 
 func play_game():
