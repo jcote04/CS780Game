@@ -321,7 +321,7 @@ func start_charge_warning():
 
 func start_disable_grid_warning():
 
-	var q = randi() % 4
+	var q = randi() % 9
 	var selected = grid_node.quadrants[q]
 
 	for b in range(warn_blinks):
