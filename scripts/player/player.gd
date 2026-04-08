@@ -11,6 +11,11 @@ signal health_changed(current: int, maximum: int)
 @export var move_speed := 400.0
 @export var max_health := 5
 @export var invincible_time := 0.4
+@export var player_bullet_scene: PackedScene
+@export var shoot_cooldown := 0.2
+@export var bullet_damage := 1
+
+var shoot_timer := 0.0
 
 var audio_hurt: AudioStreamPlayer
 
@@ -27,6 +32,7 @@ var health := 0
 var dead := false
 var invincible := false
 var invincible_timer := 0.0
+
 
 var key_map = {
 	KEY_1: 0, KEY_2: 1, KEY_3: 2, KEY_4: 3,
@@ -84,18 +90,24 @@ func _input(event):
 			target_position = grid_positions[current_index]
 			moving = true
 			
-			# Face toward target
 			var dir = (target_position - global_position).normalized()
 			anim.rotation = dir.angle() + deg_to_rad(90)
-			
+
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		print("SHOOTING")
+		shoot()
+
 
 func _physics_process(delta):
+	if shoot_timer > 0:
+		shoot_timer -= delta
+
 	if invincible:
 		invincible_timer -= delta
 		if invincible_timer <= 0:
 			invincible = false
 			shadow.animation = anim.animation
-			shadow.frame = anim.frame          
+			shadow.frame = anim.frame
 			shadow.rotation = 0
 
 	if moving:
@@ -114,6 +126,23 @@ func _physics_process(delta):
 		shadow.visible = true
 		velocity = Vector2.ZERO
 
+
+func shoot():
+	if player_bullet_scene == null:
+		print("player_bullet_scene is not assigned")
+		return
+
+	var bullet = player_bullet_scene.instantiate()
+	print("test")
+	if bullet == null:
+		print("bullet failed to instantiate")
+		return
+
+	bullet.global_position = global_position
+	bullet.direction = (get_global_mouse_position() - global_position).normalized()
+	bullet.damage = bullet_damage
+	get_tree().current_scene.add_child(bullet)
+	
 func take_damage(amount: int):
 	if invincible or dead:
 		return

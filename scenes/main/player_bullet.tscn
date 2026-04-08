@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://cm3gn8681jlhj"]
+
+[ext_resource type="Script" uid="uid://dse06ojhkjgg0" path="res://scripts/bullets/player_bullet.gd" id="1_6yi0y"]
+[ext_resource type="Texture2D" uid="uid://da2260tehyyv4" path="res://assets/sprites/Terran.png" id="2_f7f6g"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_raeie"]
+
+[node name="PlayerBullet" type="Area2D" unique_id=555481677]
+script = ExtResource("1_6yi0y")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1830199185]
+shape = SubResource("CircleShape2D_raeie")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1954747050]
+texture = ExtResource("2_f7f6g")
