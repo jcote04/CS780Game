@@ -4,6 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://b0t0bku6q1j2j" path="res://assets/backgrounds/space_background.jpg" id="2_byqcc"]
 [ext_resource type="Shader" uid="uid://cajb4hbto0dg4" path="res://assets/shaders/background.gdshader" id="3_hiibk"]
 [ext_resource type="FontFile" uid="uid://cdsh8vwbf3g4w" path="res://assets/fonts/press_start.ttf" id="3_w6ykx"]
+[ext_resource type="Theme" uid="uid://dyittlu7q4eof" path="res://ui/game_button.tres" id="5_hiibk"]
+[ext_resource type="Theme" uid="uid://cv0sbvdqcb15t" path="res://ui/volume_slider.tres" id="5_swlpu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_w6ykx"]
 shader = ExtResource("3_hiibk")
@@ -50,6 +52,16 @@ shader_parameter/scroll_speed_y = 0.02
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jrhf3"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bpunk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g2jcw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wnuh0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m0ciu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_st2cm"]
+
 [node name="Main Menu" type="Node2D" unique_id=395388207]
 script = ExtResource("1_sd5it")
 
@@ -69,7 +81,9 @@ grow_vertical = 2
 texture = ExtResource("2_byqcc")
 expand_mode = 1
 
-[node name="Title" type="Label" parent="." unique_id=1960561447]
+[node name="MenuCanvasLayer" type="CanvasLayer" parent="." unique_id=1884341308]
+
+[node name="Title" type="Label" parent="MenuCanvasLayer" unique_id=1960561447]
 offset_left = 432.0
 offset_top = 200.0
 offset_right = 880.0
@@ -83,13 +97,13 @@ text = "KeyShift"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Button_manager" type="Control" parent="." unique_id=415719536]
+[node name="Button_manager" type="Control" parent="MenuCanvasLayer" unique_id=415719536]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Start" type="Button" parent="Button_manager" unique_id=727541040]
+[node name="Start" type="Button" parent="MenuCanvasLayer/Button_manager" unique_id=727541040]
 layout_mode = 0
 offset_left = 512.0
 offset_top = 288.0
@@ -105,7 +119,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_75pso")
 text = "Start
 "
 
-[node name="Shop" type="Button" parent="Button_manager" unique_id=827162498]
+[node name="Shop" type="Button" parent="MenuCanvasLayer/Button_manager" unique_id=827162498]
 layout_mode = 0
 offset_left = 512.0
 offset_top = 384.0
@@ -120,7 +134,7 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_001j1")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_rf05u")
 text = "Shop"
 
-[node name="Options" type="Button" parent="Button_manager" unique_id=1579786349]
+[node name="Options" type="Button" parent="MenuCanvasLayer/Button_manager" unique_id=1579786349]
 layout_mode = 0
 offset_left = 512.0
 offset_top = 480.0
@@ -135,7 +149,7 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_u8x8k")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_eftjy")
 text = "Options"
 
-[node name="Quit" type="Button" parent="Button_manager" unique_id=1100778491]
+[node name="Quit" type="Button" parent="MenuCanvasLayer/Button_manager" unique_id=1100778491]
 layout_mode = 0
 offset_left = 512.0
 offset_top = 576.0
@@ -150,7 +164,118 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_a008x")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_jrhf3")
 text = "Quit"
 
-[connection signal="pressed" from="Button_manager/Start" to="." method="_on_start_pressed"]
-[connection signal="pressed" from="Button_manager/Shop" to="." method="_on_shop_pressed"]
-[connection signal="pressed" from="Button_manager/Options" to="." method="_on_options_pressed"]
-[connection signal="pressed" from="Button_manager/Quit" to="." method="_on_quit_pressed"]
+[node name="OptionsCanvasLayer" type="CanvasLayer" parent="." unique_id=19559402]
+visible = false
+
+[node name="MasterHBoxContainer" type="HBoxContainer" parent="OptionsCanvasLayer" unique_id=1130828386]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -223.0
+offset_top = -92.0
+offset_right = 365.0
+offset_bottom = -52.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+
+[node name="MasterLabel" type="Label" parent="OptionsCanvasLayer/MasterHBoxContainer" unique_id=513236148]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_w6ykx")
+theme_override_font_sizes/font_size = 26
+text = "Master Volume"
+
+[node name="MasterSlider" type="HSlider" parent="OptionsCanvasLayer/MasterHBoxContainer" unique_id=1918104087]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+theme = ExtResource("5_swlpu")
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="MusicHBoxContainer" type="HBoxContainer" parent="OptionsCanvasLayer" unique_id=1064477826]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -223.0
+offset_top = -41.0
+offset_right = 365.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 75
+
+[node name="MusicLabel" type="Label" parent="OptionsCanvasLayer/MusicHBoxContainer" unique_id=715007718]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_w6ykx")
+theme_override_font_sizes/font_size = 26
+text = "Music Volume"
+
+[node name="MusicSlider" type="HSlider" parent="OptionsCanvasLayer/MusicHBoxContainer" unique_id=1354697352]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+theme = ExtResource("5_swlpu")
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="SFXHBoxContainer" type="HBoxContainer" parent="OptionsCanvasLayer" unique_id=1459423929]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -223.0
+offset_top = 10.0
+offset_right = 365.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 125
+
+[node name="SFXLabel" type="Label" parent="OptionsCanvasLayer/SFXHBoxContainer" unique_id=1813790644]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_w6ykx")
+theme_override_font_sizes/font_size = 26
+text = "SFX Volume"
+
+[node name="SFXSlider" type="HSlider" parent="OptionsCanvasLayer/SFXHBoxContainer" unique_id=1279924164]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+theme = ExtResource("5_swlpu")
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="BackButton" type="Button" parent="OptionsCanvasLayer" unique_id=534554575]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -70.0
+offset_top = 107.0
+offset_right = 70.0
+offset_bottom = 148.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_hiibk")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_bpunk")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_g2jcw")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_wnuh0")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_m0ciu")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_st2cm")
+text = "Back"
+
+[connection signal="pressed" from="MenuCanvasLayer/Button_manager/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="MenuCanvasLayer/Button_manager/Shop" to="." method="_on_shop_pressed"]
+[connection signal="pressed" from="MenuCanvasLayer/Button_manager/Options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="MenuCanvasLayer/Button_manager/Quit" to="." method="_on_quit_pressed"]
+[connection signal="value_changed" from="OptionsCanvasLayer/MasterHBoxContainer/MasterSlider" to="." method="_on_master_slider_value_changed"]
+[connection signal="value_changed" from="OptionsCanvasLayer/MusicHBoxContainer/MusicSlider" to="." method="_on_music_slider_value_changed"]
+[connection signal="value_changed" from="OptionsCanvasLayer/SFXHBoxContainer/SFXSlider" to="." method="_on_sfx_slider_value_changed"]
+[connection signal="pressed" from="OptionsCanvasLayer/BackButton" to="." method="_on_options_back_pressed"]

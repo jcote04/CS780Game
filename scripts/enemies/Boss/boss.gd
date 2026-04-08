@@ -92,14 +92,17 @@ func _ready():
 
 	audio_laser = AudioStreamPlayer2D.new()
 	audio_laser.stream = preload("res://audio/boss_laser.wav")
+	audio_laser.bus = "SFX"
 	add_child(audio_laser)
 
 	audio_charge = AudioStreamPlayer2D.new()
 	audio_charge.stream = preload("res://audio/boss_charge.wav")
+	audio_charge.bus = "SFX"
 	add_child(audio_charge)
 
 	audio_slam = AudioStreamPlayer2D.new()
 	#audio_slam.stream = preload("res://audio/boss_slam.ogg")
+	audio_slam.bus = "SFX"
 	add_child(audio_slam)
 
 	player_node = get_node(player)
