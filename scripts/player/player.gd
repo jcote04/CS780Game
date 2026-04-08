@@ -9,7 +9,7 @@ signal health_changed(current: int, maximum: int)
 
 @export var grid_node: NodePath
 @export var move_speed := 400.0
-@export var max_health := 1
+@export var max_health := 5
 @export var invincible_time := 0.4
 
 var audio_hurt: AudioStreamPlayer
