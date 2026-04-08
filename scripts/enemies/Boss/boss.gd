@@ -125,6 +125,10 @@ func _ready():
 
 
 func _process(delta):
+	
+	if not is_instance_valid(player_node):
+		return
+	
 	# If the grid can move, keep updating the center
 	grid_center = grid_node.global_position
 
@@ -161,7 +165,7 @@ func _process(delta):
 					quadrant_disabled = true
 					start_disable_grid_warning()
 					
-					await get_tree().create_timer(10).timeout
+					await get_tree().create_timer(10, false, false, true).timeout
 					quadrant_disabled = false
 
 		"warn":
@@ -241,6 +245,8 @@ func _process(delta):
 				timer = idle_duration
 				
 func is_player_in_laser() -> bool:
+	if not is_instance_valid(player_node):
+		return false
 	var dir = (locked_player_pos - global_position).normalized()
 	var to_player = player_node.global_position - global_position
 
@@ -320,16 +326,18 @@ func start_disable_grid_warning():
 		for i in selected:
 			grid_node.cells[i].modulate = warn_color
 
-		await get_tree().create_timer(blink_time).timeout
+		await get_tree().create_timer(blink_time, false, false, true).timeout
 
 		for i in selected:
 			grid_node.cells[i].modulate = normal_color
 
-		await get_tree().create_timer(blink_time).timeout
+		await get_tree().create_timer(blink_time, false, false, true).timeout
 
 	grid_node.disable_quadrant(q)
 
 func perform_projectile_burst():
+	if not is_instance_valid(player_node):
+		return false
 	template_projectile.monitoring = true
 	for i in range(projectile_count):
 		proj_angle = base_angle - half_spread + deg_to_rad(projectile_spread_angle * i)
@@ -343,13 +351,13 @@ func perform_projectile_burst():
 		projectile.visible = true  # make sure the duplicated node is visible
 		get_parent().add_child(projectile)
 		
-		projectile.get_tree().create_timer(3.0).timeout.connect(func():
+		projectile.get_tree().create_timer(3.0, false, false, true).timeout.connect(func():
 			if is_instance_valid(projectile):
 				projectile.queue_free()
 		)
 		
 		# Wait before firing the next projectile
-		await get_tree().create_timer(projectile_delay).timeout
+		await get_tree().create_timer(projectile_delay, false, false, true).timeout
 
 func update_attack_rect(color: Color):
 	var world_pos = global_position

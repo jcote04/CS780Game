@@ -9,7 +9,7 @@ signal health_changed(current: int, maximum: int)
 
 @export var grid_node: NodePath
 @export var move_speed := 400.0
-@export var max_health := 5
+@export var max_health := 1
 @export var invincible_time := 0.4
 
 var audio_hurt: AudioStreamPlayer
@@ -24,6 +24,7 @@ var target_position: Vector2
 var moving := false
 
 var health := 0
+var dead := false
 var invincible := false
 var invincible_timer := 0.0
 
@@ -114,7 +115,7 @@ func _physics_process(delta):
 		velocity = Vector2.ZERO
 
 func take_damage(amount: int):
-	if invincible:
+	if invincible or dead:
 		return
 	
 	# Flash red
@@ -147,8 +148,29 @@ func heal(amount: int):
 
 func die():
 	print("Player died")
-	queue_free()
-
+	dead = true
+	
+	moving = false
+	velocity = Vector2.ZERO
+	set_physics_process(false)
+	set_process_input(false)
+	MusicManager.fade_out(1.0)
+	
+	Engine.time_scale = 0.3
+	
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(anim, "modulate:a", 0.0, 0.5)
+	tween.tween_property(anim, "rotation", anim.rotation + deg_to_rad(360), 1.0)
+	tween.tween_property(anim, "scale", Vector2(0.1, 0.1), 1.0)
+	
+	CameraManager.shake(30.0, 0.8)
+	
+	# true = ignore time scale
+	await get_tree().create_timer(1.5, false, false, true).timeout
+	Engine.time_scale = 1.0
+	get_node("/root/Main/GameOverScreen").show_screen()
+	
 func _on_hurtbox_area_entered(area: Area2D):
 	if area.is_in_group("enemy_attack"):
 		take_damage(1)

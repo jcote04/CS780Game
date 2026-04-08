@@ -10,12 +10,6 @@ func _ready():
 	hover_sound.stream = preload("res://audio/ui_mouse_hover.wav")
 	hover_sound.volume_db = -5.0
 	add_child(hover_sound)
-
-	# Connect hover signals for each button
-	$Button_manager/Start.mouse_entered.connect(_on_button_hover)
-	$Button_manager/Shop.mouse_entered.connect(_on_button_hover)
-	$Button_manager/Options.mouse_entered.connect(_on_button_hover)
-	$Button_manager/Quit.mouse_entered.connect(_on_button_hover)
 	
 	var bg = $Background
 	bg.size = get_viewport().get_visible_rect().size
@@ -23,16 +17,19 @@ func _ready():
 	
 	for button in $Button_manager.get_children():
 		if button is Button:
-			button.add_theme_color_override("font_hover_color", Color(0.07, 0.592, 0.522, 1.0)) # yellow on hover
+			button.add_theme_color_override("font_hover_color", Color(0.07, 0.592, 0.522, 1.0))
+			button.mouse_entered.connect(_on_button_hover.bind(button))
+			button.mouse_exited.connect(_on_button_unhover.bind(button))
 	
 	
-func _on_button_hover():
+func _on_button_hover(button: Button):
 	hover_sound.play()
+	button.add_theme_font_size_override("font_size", 38)
 
+func _on_button_unhover(button: Button):
+	button.add_theme_font_size_override("font_size", 32)
 
 func _on_start_pressed() -> void:
-	MusicManager.stop()
-	MusicManager.play_game()
 	get_tree().change_scene_to_file("res://scenes/main/main.tscn")
 
 
