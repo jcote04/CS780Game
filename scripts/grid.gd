@@ -24,6 +24,7 @@ extends Node2D
 	
 var cells := []
 var disabled_cells := {}
+var heal_cell := {}
 var font = load("res://assets/fonts/press_start.ttf")
 
 func _ready():
@@ -76,3 +77,29 @@ func disable_quadrant(q: int):
 		if cells[i]:
 			cells[i].modulate = Color(1, 1, 1)
 			disabled_cells.erase(i)
+
+func heal_random_cell():
+	var available := []
+
+	# Collect cells that are NOT disabled
+	for i in range(cells.size()):
+		if not disabled_cells.has(i):
+			available.append(i)
+
+	if available.is_empty():
+		return
+
+	var chosen = available[randi() % available.size()]
+
+	# Visual feedback (green flash)
+	cells[chosen].modulate = Color(0, 1, 0)
+
+	# Store it temporarily
+	heal_cell[chosen] = "heal"
+
+	await get_tree().create_timer(5).timeout
+
+	# Reset
+	if cells[chosen]:
+		cells[chosen].modulate = Color(1, 1, 1)
+		heal_cell.erase(chosen)

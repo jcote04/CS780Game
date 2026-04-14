@@ -117,10 +117,12 @@ func _physics_process(delta):
 		velocity = direction * move_speed
 		move_and_slide()
 
-		if global_position.distance_to(target_position) < 5:
-			global_position = target_position
-			velocity = Vector2.ZERO
-			moving = false
+	if global_position.distance_to(target_position) < 5:
+		global_position = target_position
+		velocity = Vector2.ZERO
+		moving = false
+
+		on_player_step(current_index)
 	else:
 		anim.play("idle")
 		shadow.visible = true
@@ -206,3 +208,14 @@ func _on_hurtbox_area_entered(area: Area2D):
 func _on_hurtbox_body_entered(body: Node):
 	if body.is_in_group("enemy"):
 		take_damage(1)
+
+func on_player_step(cell_index: int):
+	if grid_.heal_cell.has(cell_index):
+		var effect = grid_.heal_cell[cell_index]
+		
+		if effect == "heal":
+			heal(1)
+			
+			# Reset the tile visually + remove effect
+			grid_.cells[cell_index].modulate = Color(1, 1, 1)
+			grid_.disabled_cells.erase(cell_index)

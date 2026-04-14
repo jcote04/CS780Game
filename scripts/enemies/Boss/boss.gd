@@ -173,13 +173,16 @@ func _process(delta):
 				else:
 					start_charge_warning()
 
-				# Try grid attack once
-				if !quadrant_disabled and randf() < 0.5:
+				if !quadrant_disabled:
 					quadrant_disabled = true
-					start_disable_grid_warning()
-					
+					if randf() < 0.5:
+						#grid_node.heal_random_cell()
+						start_disable_grid_warning()
+					else:
+						grid_node.heal_random_cell()
 					await get_tree().create_timer(10, false, false, true).timeout
 					quadrant_disabled = false
+						
 
 		"warn":
 			timer -= delta
