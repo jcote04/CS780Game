@@ -14,6 +14,12 @@ extends Node2D
 @export var attack_width := 40.0
 @export var attack_length := 1200.0
 @export var blink_duration := 0.2
+@onready var hurtbox: Area2D = $Hurtbox
+
+signal health_changed(current: int, maximum: int)
+@export var max_health := 30
+var health := 0
+var is_dead := false
 
 # Charge attack
 @export var charge_warn_color := Color(1, 0.5, 0, 0.45)
@@ -80,7 +86,11 @@ var return_target := Vector2.ZERO
 
 func _ready():
 	randomize()
-
+	
+	health = max_health
+	hurtbox.area_entered.connect(_on_hurtbox_area_entered)
+	emit_signal("health_changed", health, max_health)
+	
 	laser_line = $LaserLine
 	laser_line_core = $LaserLineCore
 	laser_line.visible = false
@@ -391,3 +401,32 @@ func hide_laser():
 	await tween.finished
 	laser_line.visible = false
 	laser_line_core.visible = false
+	
+func _on_hurtbox_area_entered(area: Area2D):
+	if area.is_in_group("player_bullet"):
+		take_damage(area.damage)
+		area.queue_free()
+
+func take_damage(damage: int):
+	if is_dead:
+		return
+	
+	health -= damage
+	print("boss health:  ", health)
+	if health < 0:
+		health = 0
+	emit_signal("health_changed", health, max_health)
+
+	if health <= 0:
+		die()
+		
+func die():
+	if is_dead:
+		return
+
+	is_dead = true
+	print("Boss died")
+
+	set_process(false)
+	hide_laser()
+	queue_free()

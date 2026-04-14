@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://wepj5l05ri0c" path="res://scripts/player/player.gd" id="2_iuonh"]
 [ext_resource type="Shader" uid="uid://cajb4hbto0dg4" path="res://assets/shaders/background.gdshader" id="2_yyfjg"]
 [ext_resource type="Script" uid="uid://b7mw2xlnpbtxm" path="res://scripts/enemies/Boss/boss.gd" id="3_k2fmo"]
-[ext_resource type="Script" path="res://scenes/main/hud.gd" id="4_l3cfh"]
+[ext_resource type="Script" uid="uid://dtckdwlvuollv" path="res://scenes/main/hud.gd" id="4_l3cfh"]
 [ext_resource type="Texture2D" uid="uid://me32ta7jabg6" path="res://assets/sprite_sheets/player_ship1.png" id="4_ow5a4"]
 [ext_resource type="Texture2D" uid="uid://cv7wls1jxnjyn" path="res://assets/sprite_sheets/boss_eyeball.png" id="6_hujxm"]
 [ext_resource type="Script" uid="uid://buiuaqf5fya66" path="res://scripts/bullets/Projectile.gd" id="8_a8run"]
@@ -180,6 +180,9 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_raeie"]
+radius = 21.21
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_b1x3f"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b1x3f"]
@@ -287,6 +290,12 @@ sprite_frames = SubResource("SpriteFrames_6llfj")
 animation = &"move"
 frame_progress = 0.1767002
 
+[node name="Hurtbox" type="Area2D" parent="Boss" unique_id=877030018]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boss/Hurtbox" unique_id=1026048751]
+position = Vector2(8, -23)
+shape = SubResource("CircleShape2D_raeie")
+
 [node name="Projectile" type="Area2D" parent="." unique_id=189889944]
 process_mode = 1
 position = Vector2(-106, 0)
@@ -300,28 +309,45 @@ scale = Vector2(0.15, 0.15)
 texture = ExtResource("10_7smn1")
 
 [node name="PlayerBullet" parent="." unique_id=555481677 instance=ExtResource("11_raeie")]
+position = Vector2(-107, -68)
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1850616728]
 script = ExtResource("4_l3cfh")
 player_path = NodePath("../Player")
+boss_path = NodePath("../Boss")
 
-[node name="MarginContainer" type="MarginContainer" parent="HUD" unique_id=171871377]
+[node name="PlayerHUD" type="MarginContainer" parent="HUD" unique_id=171871377]
 offset_left = 24.0
 offset_top = 22.0
 offset_right = 244.0
 offset_bottom = 76.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HUD/MarginContainer" unique_id=737446890]
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/PlayerHUD" unique_id=737446890]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HUD/MarginContainer/VBoxContainer" unique_id=1216035880]
+[node name="Label" type="Label" parent="HUD/PlayerHUD/VBoxContainer" unique_id=1216035880]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("9_b1x3f")
 
-[node name="ProgressBar" type="ProgressBar" parent="HUD/MarginContainer/VBoxContainer" unique_id=192540815]
+[node name="ProgressBar" type="ProgressBar" parent="HUD/PlayerHUD/VBoxContainer" unique_id=192540815]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("9_b1x3f")
 theme_override_styles/fill = SubResource("StyleBoxFlat_b1x3f")
+
+[node name="BossHUD" type="CenterContainer" parent="HUD" unique_id=720562710]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 54.0
+grow_horizontal = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/BossHUD" unique_id=165283576]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HUD/BossHUD/VBoxContainer" unique_id=1181660105]
+layout_mode = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="HUD/BossHUD/VBoxContainer" unique_id=126423133]
+layout_mode = 2
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=209785228]
 environment = SubResource("Environment_6q06x")

@@ -9,6 +9,7 @@ var direction := Vector2.ZERO
 func _ready():
 	body_entered.connect(_on_body_entered)
 	area_entered.connect(_on_area_entered)
+	add_to_group("player_bullet")
 
 func _physics_process(delta):
 	global_position += direction * speed * delta

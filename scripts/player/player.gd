@@ -95,7 +95,6 @@ func _input(event):
 			anim.rotation = dir.angle() + deg_to_rad(90)
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		print("SHOOTING")
 		shoot()
 
 
@@ -134,7 +133,6 @@ func shoot():
 		return
 
 	var bullet = player_bullet_scene.instantiate()
-	print("test")
 	if bullet == null:
 		print("bullet failed to instantiate")
 		return
