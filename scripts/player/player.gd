@@ -117,12 +117,12 @@ func _physics_process(delta):
 		velocity = direction * move_speed
 		move_and_slide()
 
-	if global_position.distance_to(target_position) < 5:
-		global_position = target_position
-		velocity = Vector2.ZERO
-		moving = false
+		if global_position.distance_to(target_position) < 5:
+			global_position = target_position
+			velocity = Vector2.ZERO
+			moving = false
 
-		on_player_step(current_index)
+			on_player_step(current_index)
 	else:
 		anim.play("idle")
 		shadow.visible = true

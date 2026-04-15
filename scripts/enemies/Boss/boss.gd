@@ -9,6 +9,7 @@ extends Node2D
 @export var move_speed := 1.5
 @export var attack_color := Color(1, 0, 0, 0.8)
 @export var warn_color := Color(1, 1, 0, 0.4)
+@export var warn_grid_color := Color(0.726, 0.23, 0.0, 0.4)
 @export var idle_duration := 2.0
 @export var attack_duration := 0.5
 @export var attack_width := 40.0
@@ -17,7 +18,7 @@ extends Node2D
 @onready var hurtbox: Area2D = $Hurtbox
 
 signal health_changed(current: int, maximum: int)
-@export var max_health := 30
+@export var max_health := 1
 var health := 0
 var is_dead := false
 
@@ -340,7 +341,7 @@ func start_disable_grid_warning():
 	for b in range(warn_blinks):
 
 		for i in selected:
-			grid_node.cells[i].modulate = warn_color
+			grid_node.cells[i].modulate = warn_grid_color
 
 		await get_tree().create_timer(blink_time, false, false, true).timeout
 
@@ -432,4 +433,10 @@ func die():
 
 	set_process(false)
 	hide_laser()
+
+	# Small delay for effect
+	await get_tree().create_timer(1.0).timeout
+
+	get_node("/root/Main/GameWinScreen").show_screen()
+
 	queue_free()
