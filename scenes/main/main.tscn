@@ -6,7 +6,9 @@
 [ext_resource type="Script" uid="uid://wepj5l05ri0c" path="res://scripts/player/player.gd" id="2_iuonh"]
 [ext_resource type="Shader" uid="uid://cajb4hbto0dg4" path="res://assets/shaders/background.gdshader" id="2_yyfjg"]
 [ext_resource type="Script" uid="uid://b7mw2xlnpbtxm" path="res://scripts/enemies/Boss/boss.gd" id="3_k2fmo"]
+[ext_resource type="Texture2D" uid="uid://bjmgym4clj0dm" path="res://assets/sprites/pixelartcoin.png" id="3_nvumn"]
 [ext_resource type="Script" uid="uid://dtckdwlvuollv" path="res://scenes/main/hud.gd" id="4_l3cfh"]
+[ext_resource type="Texture2D" uid="uid://devx0filraek0" path="res://assets/sprites/pixelartshop.png" id="4_ou6is"]
 [ext_resource type="Texture2D" uid="uid://me32ta7jabg6" path="res://assets/sprite_sheets/player_ship1.png" id="4_ow5a4"]
 [ext_resource type="Texture2D" uid="uid://cv7wls1jxnjyn" path="res://assets/sprite_sheets/boss_eyeball.png" id="6_hujxm"]
 [ext_resource type="Script" uid="uid://buiuaqf5fya66" path="res://scripts/bullets/Projectile.gd" id="8_a8run"]
@@ -15,6 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://cm3gn8681jlhj" path="res://scenes/main/player_bullet.tscn" id="11_raeie"]
 [ext_resource type="Script" uid="uid://d3ewqwpmi7trc" path="res://scripts/game_over_screen.gd" id="12_th5th"]
 [ext_resource type="Theme" uid="uid://dyittlu7q4eof" path="res://ui/game_button.tres" id="13_7smn1"]
+[ext_resource type="PackedScene" uid="uid://cd1af37aqcpaa" path="res://scenes/main/shop_ui.tscn" id="16_hxu8e"]
 [ext_resource type="Script" uid="uid://4ykf3cjgmuhm" path="res://scenes/main/game_win_screen.gd" id="16_hxu8e"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_b1x3f"]
@@ -226,6 +229,8 @@ script = ExtResource("1_7smn1")
 [node name="Grid" type="Node2D" parent="." unique_id=1035666490]
 script = ExtResource("1_hyk8p")
 cell_size = Vector2(90, 90)
+coin_texture = ExtResource("3_nvumn")
+shop_texture = ExtResource("4_ou6is")
 
 [node name="Camera2D" type="Camera2D" parent="Grid" unique_id=1425661607 groups=["camera"]]
 
@@ -516,3 +521,6 @@ theme_override_styles/hover = SubResource("StyleBoxEmpty_r4lks")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_pg34l")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m4h2d")
 text = "Main Menu"
+
+[node name="ShopUI" parent="." unique_id=468115205 instance=ExtResource("16_hxu8e")]
+visible = false

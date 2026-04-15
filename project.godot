@@ -15,10 +15,15 @@ run/main_scene="uid://cmhugeq74naru"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://bjr7j0ujcqjqh"
+
 [autoload]
 
 MusicManager="*uid://d4lugtfqxtwgo"
 CameraManager="*uid://dtrbplv06u661"
+UpgradeManager="*uid://c1rx6c1od8h27"
 
 [display]
 
