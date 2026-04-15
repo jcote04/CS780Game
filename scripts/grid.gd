@@ -4,8 +4,6 @@ extends Node2D
 @export var font_size := 32
 @export var cell_size := Vector2(120, 120)
 @export var cell_spacing := Vector2(20, 20)
-@export var coin_texture: Texture2D
-@export var shop_texture: Texture2D
 @export var cell_chars := [
 	"1","2","3","4",
 	"Q","W","E","R",
@@ -27,15 +25,9 @@ extends Node2D
 var cells := []
 var disabled_cells := {}
 var heal_cell := {}
-var shop_cell := {}
-var coin_cell := {}
-var shop_paused := false
-var shop_spawn_timer: SceneTreeTimer = null 
 var font = load("res://assets/fonts/press_start.ttf")
 
 func _ready():
-	spawn_shop_loop()
-	spawn_coin_loop()
 	position = get_viewport().get_visible_rect().size / 2
 	var total_width = cols * cell_size.x + (cols - 1) * cell_spacing.x
 	var total_height = rows * cell_size.y + (rows - 1) * cell_spacing.y
@@ -91,7 +83,7 @@ func heal_random_cell():
 
 	# Collect cells that are NOT disabled
 	for i in range(cells.size()):
-		if not disabled_cells.has(i) and not shop_cell.has(i) and not coin_cell.has(i):
+		if not disabled_cells.has(i):
 			available.append(i)
 
 	if available.is_empty():
@@ -111,91 +103,3 @@ func heal_random_cell():
 	if cells[chosen]:
 		cells[chosen].modulate = Color(1, 1, 1)
 		heal_cell.erase(chosen)
-		
-
-func spawn_coin():
-	var available := []
-
-	for i in range(cells.size()):
-		if not disabled_cells.has(i) and not heal_cell.has(i) and not shop_cell.has(i) and not coin_cell.has(i):
-			available.append(i)
-
-	if available.is_empty():
-		return
-
-	var chosen = available[randi() % available.size()]
-
-	var coin_sprite = Sprite2D.new()
-	coin_sprite.texture = coin_texture
-	coin_sprite.scale = Vector2(0.22, 0.22)
-	cells[chosen].add_child(coin_sprite)
-
-	coin_cell[chosen] = coin_sprite
-	print("Coin spawned at:", chosen)
-	
-	# Auto remove after 8 seconds
-	await get_tree().create_timer(8).timeout
-	if coin_cell.has(chosen):
-		clear_coin(chosen)
-
-func spawn_coin_loop():
-	while true:
-		await get_tree().create_timer(5).timeout
-		if not shop_paused:
-			spawn_coin()	
-	
-	
-func spawn_shop():
-	if not shop_cell.is_empty():
-		print("Shop already exists, skipping spawn")
-		return
-	
-	var available := []
-
-	for i in range(cells.size()):
-		if not disabled_cells.has(i) and not heal_cell.has(i) and not shop_cell.has(i):
-			available.append(i)
-
-	if available.is_empty():
-		return
-
-	var chosen = available[randi() % available.size()]
-
-	var shop_sprite = Sprite2D.new()
-	shop_sprite.texture = shop_texture
-	shop_sprite.scale = Vector2(0.2, 0.2)
-	cells[chosen].add_child(shop_sprite)
-
-	shop_cell[chosen] = shop_sprite
-	print("Shop spawned at:", chosen)
-	
-
-func spawn_shop_loop():
-	while true:
-		# Wait before spawning next shop
-		shop_spawn_timer = get_tree().create_timer(20)
-		await shop_spawn_timer.timeout
-		
-		# Only spawn if not paused
-		if not shop_paused:
-			spawn_shop()
-		
-		
-func clear_shop(index):
-	if shop_cell.has(index):
-		var sprite = shop_cell[index]
-		if is_instance_valid(sprite):
-			sprite.queue_free()
-		shop_cell.erase(index)
-		
-		
-func clear_coin(index):
-	if coin_cell.has(index):
-		var sprite = coin_cell[index]
-		if is_instance_valid(sprite):
-			sprite.queue_free()
-		coin_cell.erase(index)
-		
-		
-func set_shop_paused(paused: bool):
-	shop_paused = paused
