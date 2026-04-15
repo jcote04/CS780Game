@@ -17,7 +17,7 @@ extends Node2D
 @onready var hurtbox: Area2D = $Hurtbox
 
 signal health_changed(current: int, maximum: int)
-@export var max_health := 30
+@export var max_health := 100
 var health := 0
 var is_dead := false
 

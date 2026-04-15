@@ -1,0 +1,179 @@
+[gd_scene format=3 uid="uid://cd1af37aqcpaa"]
+
+[ext_resource type="Script" uid="uid://dcmaj6kluvsut" path="res://scripts/shop_ui.gd" id="1_q1toy"]
+[ext_resource type="FontFile" uid="uid://cdsh8vwbf3g4w" path="res://assets/fonts/press_start.ttf" id="2_ggdef"]
+[ext_resource type="Theme" uid="uid://dyittlu7q4eof" path="res://ui/game_button.tres" id="3_2st0i"]
+[ext_resource type="Texture2D" uid="uid://cwcj5e087k578" path="res://assets/sprites/bulletpixelart.png" id="3_67mj6"]
+[ext_resource type="Texture2D" uid="uid://f2u4lqdc4e8" path="res://assets/sprites/pixelartarrow.png" id="5_14035"]
+[ext_resource type="Texture2D" uid="uid://bd66hw72kjhda" path="res://assets/sprites/pixelartheart.png" id="6_ud8vp"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_67mj6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_14035"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ud8vp"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_142aw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r088j"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b3ka6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8pf3m"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t8bie"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ygnnn"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8j4jf"]
+
+[node name="ShopUI" type="CanvasLayer" unique_id=468115205]
+script = ExtResource("1_q1toy")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2112891209]
+offset_left = -202.99998
+offset_top = -184.0
+offset_right = -162.99998
+offset_bottom = -144.0
+scale = Vector2(44.74412, 33.06028)
+color = Color(0, 0, 0, 0.7294118)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1048055405]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -66.0
+offset_top = -49.5
+offset_right = 66.0
+offset_bottom = 49.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 80
+
+[node name="ShopLabel" type="Label" parent="VBoxContainer" unique_id=1134973585]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.98523265, 0.88209057, 0.2788988, 1)
+theme_override_constants/outline_size = 25
+theme_override_fonts/font = ExtResource("2_ggdef")
+theme_override_font_sizes/font_size = 39
+text = "Shop"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PointsLabel" type="Label" parent="VBoxContainer" unique_id=740931191]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_ggdef")
+theme_override_font_sizes/font_size = 17
+horizontal_alignment = 1
+
+[node name="TimerLabel" type="Label" parent="VBoxContainer" unique_id=39327792]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UpgradeArtContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=616106142]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+theme_override_constants/separation = 50
+
+[node name="BulletDamageContainer" type="VBoxContainer" parent="VBoxContainer/UpgradeArtContainer" unique_id=1281347518]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="BulletDamageArt" type="TextureRect" parent="VBoxContainer/UpgradeArtContainer/BulletDamageContainer" unique_id=905118521]
+custom_minimum_size = Vector2(120, 100)
+layout_mode = 2
+texture = ExtResource("3_67mj6")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="BulletDamageButton" type="Button" parent="VBoxContainer/UpgradeArtContainer/BulletDamageContainer" unique_id=782967854]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("3_2st0i")
+theme_override_colors/font_hover_color = Color(0.9843137, 0.88235295, 0.27450982, 1)
+theme_override_constants/outline_size = 25
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxEmpty_67mj6")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_14035")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_ud8vp")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_142aw")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_r088j")
+text = "Upgrade Bullet Damage"
+
+[node name="FireRateContainer" type="VBoxContainer" parent="VBoxContainer/UpgradeArtContainer" unique_id=930402780]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="FireRateArt" type="TextureRect" parent="VBoxContainer/UpgradeArtContainer/FireRateContainer" unique_id=2056376498]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("5_14035")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="FireRateButton" type="Button" parent="VBoxContainer/UpgradeArtContainer/FireRateContainer" unique_id=463563256]
+layout_mode = 2
+theme = ExtResource("3_2st0i")
+theme_override_colors/font_hover_color = Color(0.9843137, 0.88235295, 0.27450982, 1)
+theme_override_constants/outline_size = 25
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxEmpty_67mj6")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_14035")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_ud8vp")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_142aw")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_r088j")
+text = "Upgrade Fire Rate"
+
+[node name="MaxHealthContainer" type="VBoxContainer" parent="VBoxContainer/UpgradeArtContainer" unique_id=617925449]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="MaxHealthArt" type="TextureRect" parent="VBoxContainer/UpgradeArtContainer/MaxHealthContainer" unique_id=3650083]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("6_ud8vp")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="MaxHealthButton" type="Button" parent="VBoxContainer/UpgradeArtContainer/MaxHealthContainer" unique_id=1723350046]
+layout_mode = 2
+theme = ExtResource("3_2st0i")
+theme_override_colors/font_hover_color = Color(0.9843137, 0.88235295, 0.27450982, 1)
+theme_override_constants/outline_size = 25
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxEmpty_67mj6")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_14035")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_ud8vp")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_142aw")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_r088j")
+text = " Upgrade Max Health  "
+
+[node name="DoneButton" type="Button" parent="VBoxContainer" unique_id=439106089]
+layout_mode = 2
+theme = ExtResource("3_2st0i")
+theme_override_colors/font_hover_color = Color(0.9843137, 0.88235295, 0.27450982, 1)
+theme_override_constants/outline_size = 25
+theme_override_styles/normal = SubResource("StyleBoxEmpty_b3ka6")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_8pf3m")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_t8bie")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ygnnn")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_8j4jf")
+text = "Done"
+
+[connection signal="pressed" from="VBoxContainer/UpgradeArtContainer/BulletDamageContainer/BulletDamageButton" to="." method="_on_bullet_damage_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/UpgradeArtContainer/FireRateContainer/FireRateButton" to="." method="_on_fire_rate_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/UpgradeArtContainer/MaxHealthContainer/MaxHealthButton" to="." method="_on_max_health_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/DoneButton" to="." method="_on_done_button_pressed"]
