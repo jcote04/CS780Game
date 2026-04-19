@@ -15,7 +15,8 @@
 [ext_resource type="PackedScene" uid="uid://cm3gn8681jlhj" path="res://scenes/main/player_bullet.tscn" id="11_raeie"]
 [ext_resource type="Script" uid="uid://d3ewqwpmi7trc" path="res://scripts/game_over_screen.gd" id="12_th5th"]
 [ext_resource type="Theme" uid="uid://dyittlu7q4eof" path="res://ui/game_button.tres" id="13_7smn1"]
-[ext_resource type="Script" uid="uid://4ykf3cjgmuhm" path="res://scenes/main/game_win_screen.gd" id="16_hxu8e"]
+[ext_resource type="Script" path="res://scenes/main/game_win_screen.gd" id="16_hxu8e"]
+[ext_resource type="PackedScene" uid="uid://cd1af37aqcpaa" path="res://scenes/main/shop_ui.tscn" id="19_necax"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_b1x3f"]
 shader = ExtResource("2_yyfjg")
@@ -516,3 +517,5 @@ theme_override_styles/hover = SubResource("StyleBoxEmpty_r4lks")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_pg34l")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m4h2d")
 text = "Main Menu"
+
+[node name="ShopUI" parent="." unique_id=468115205 instance=ExtResource("19_necax")]
