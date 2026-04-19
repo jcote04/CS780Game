@@ -17,6 +17,9 @@ var fire_rate_cost = 10
 
 var player_node = null
 
+func _ready():
+	add_to_group("upgrade_manager")
+
 func register_player(player):
 	player_node = player
 	apply_upgrades_to_player()

@@ -6,7 +6,7 @@ signal health_changed(current: int, maximum: int)
 @onready var shadow: AnimatedSprite2D = $AnimatedSprite2D/Shadow
 
 @onready var grid_ = get_node("/root/Main/Grid")
-
+@onready var UpgadeManager = get_node("/root/Main/UpgradeManager")
 @export var grid_node: NodePath
 @export var move_speed := 400.0
 @export var max_health := 5
