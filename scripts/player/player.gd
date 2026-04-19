@@ -6,18 +6,19 @@ signal health_changed(current: int, maximum: int)
 @onready var shadow: AnimatedSprite2D = $AnimatedSprite2D/Shadow
 
 @onready var grid_ = get_node("/root/Main/Grid")
-
+@onready var UpgadeManager = get_node("/root/Main/UpgradeManager")
 @export var grid_node: NodePath
 @export var move_speed := 400.0
 @export var max_health := 5
 @export var invincible_time := 0.4
 @export var player_bullet_scene: PackedScene
-@export var shoot_cooldown := 0.2
+@export var shoot_cooldown := 1.0
 @export var bullet_damage := 1
 
 var shoot_timer := 0.0
 
 var audio_hurt: AudioStreamPlayer
+var audio_coin: AudioStreamPlayer
 
 var camera: Camera2D
 var shake_strength := 17.0
@@ -44,6 +45,7 @@ var key_map = {
 @onready var hurtbox: Area2D = $Hurtbox
 
 func _ready():
+	UpgradeManager.register_player(self)
 	
 	# Sprite
 	anim.play("idle")
@@ -81,6 +83,12 @@ func _ready():
 	audio_hurt.volume_db = -5.0
 	audio_hurt.bus = "SFX"
 	add_child(audio_hurt)
+	
+	audio_coin = AudioStreamPlayer.new()
+	audio_coin.stream = preload("res://audio/coinpickup.mp3")
+	audio_coin.volume_db = -5.0
+	audio_coin.bus = "SFX"
+	add_child(audio_coin)
 
 func _input(event):
 	if event is InputEventKey and event.pressed:
@@ -130,6 +138,9 @@ func _physics_process(delta):
 
 
 func shoot():
+	print("Current firerate: ", shoot_cooldown)
+	if shoot_timer > 0:
+		return
 	if player_bullet_scene == null:
 		print("player_bullet_scene is not assigned")
 		return
@@ -143,6 +154,9 @@ func shoot():
 	bullet.direction = (get_global_mouse_position() - global_position).normalized()
 	bullet.damage = bullet_damage
 	get_tree().current_scene.add_child(bullet)
+	
+	shoot_timer = shoot_cooldown
+	
 	
 func take_damage(amount: int):
 	if invincible or dead:
@@ -219,3 +233,21 @@ func on_player_step(cell_index: int):
 			# Reset the tile visually + remove effect
 			grid_.cells[cell_index].modulate = Color(1, 1, 1)
 			grid_.disabled_cells.erase(cell_index)
+			
+	if grid_.shop_cell.has(cell_index):
+		if grid_.disabled_cells.has(cell_index):
+			print("Shop is disabled, can't use it!")
+			return
+		print("Entered shop cell")
+		
+		get_node("/root/Main/ShopUI").open_shop()
+		grid_.clear_shop(cell_index)
+		
+	if grid_.coin_cell.has(cell_index):
+		if grid_.disabled_cells.has(cell_index):
+			print("Coin is disabled, can't collect it!")
+			return
+		print("Coin collected!")
+		audio_coin.play()
+		get_node("/root/Main/ShopUI").add_points(10)
+		grid_.clear_coin(cell_index)
