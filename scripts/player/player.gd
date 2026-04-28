@@ -15,6 +15,9 @@ signal health_changed(current: int, maximum: int)
 @export var shoot_cooldown := 1.0
 @export var bullet_damage := 1
 
+@export var pause_menu_path: NodePath
+@onready var pause_menu: CanvasLayer = get_node(pause_menu_path)
+
 var shoot_timer := 0.0
 
 var audio_hurt: AudioStreamPlayer
@@ -46,6 +49,8 @@ var key_map = {
 
 func _ready():
 	UpgradeManager.register_player(self)
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	pause_menu.visible = false
 	
 	# Sprite
 	anim.play("idle")
@@ -91,7 +96,15 @@ func _ready():
 	add_child(audio_coin)
 
 func _input(event):
-	if event is InputEventKey and event.pressed:
+	
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_ESCAPE:
+			toggle_pause_menu()
+			return
+
+		if get_tree().paused:
+			return
+
 		if event.keycode in key_map:
 			current_index = key_map[event.keycode]
 			if grid_.disabled_cells.has(current_index):
@@ -102,13 +115,22 @@ func _input(event):
 			var dir = (target_position - global_position).normalized()
 			anim.rotation = dir.angle() + deg_to_rad(90)
 
+	if get_tree().paused:
+		return
+
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		shoot()
+	
+func toggle_pause_menu():
+	var paused = !get_tree().paused
+	get_tree().paused = paused
+	pause_menu.visible = paused
 
 
 func _physics_process(delta):
-	if shoot_timer > 0:
-		shoot_timer -= delta
+	if get_tree().paused:
+		velocity = Vector2.ZERO
+		return
 
 	if invincible:
 		invincible_timer -= delta
@@ -129,12 +151,17 @@ func _physics_process(delta):
 			global_position = target_position
 			velocity = Vector2.ZERO
 			moving = false
-
+			
 			on_player_step(current_index)
 	else:
 		anim.play("idle")
 		shadow.visible = true
 		velocity = Vector2.ZERO
+		
+	if shoot_timer > 0:
+		shoot_timer -= delta
+
+	
 
 
 func shoot():
