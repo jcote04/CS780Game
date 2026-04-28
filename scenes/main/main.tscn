@@ -17,9 +17,10 @@
 [ext_resource type="PackedScene" uid="uid://cm3gn8681jlhj" path="res://scenes/main/player_bullet.tscn" id="11_raeie"]
 [ext_resource type="Script" uid="uid://d3ewqwpmi7trc" path="res://scripts/game_over_screen.gd" id="12_th5th"]
 [ext_resource type="Theme" uid="uid://dyittlu7q4eof" path="res://ui/game_button.tres" id="13_7smn1"]
-[ext_resource type="Script" path="res://scenes/main/game_win_screen.gd" id="16_hxu8e"]
-[ext_resource type="PackedScene" path="res://scenes/main/shop_ui.tscn" id="19_necax"]
+[ext_resource type="Script" uid="uid://4ykf3cjgmuhm" path="res://scenes/main/game_win_screen.gd" id="16_hxu8e"]
+[ext_resource type="PackedScene" uid="uid://cd1af37aqcpaa" path="res://scenes/main/shop_ui.tscn" id="19_necax"]
 [ext_resource type="Script" uid="uid://c1rx6c1od8h27" path="res://scripts/managers/upgrade_manager.gd" id="20_r4lks"]
+[ext_resource type="Script" uid="uid://c70iq8x4xgokm" path="res://scenes/main/pause_menu.gd" id="21_pg34l"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_b1x3f"]
 shader = ExtResource("2_yyfjg")
@@ -256,6 +257,7 @@ expand_mode = 1
 script = ExtResource("2_iuonh")
 grid_node = NodePath("../Grid")
 player_bullet_scene = ExtResource("11_raeie")
+pause_menu_path = NodePath("../PauseMenu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=875924440]
 shape = SubResource("RectangleShape2D_k2fmo")
@@ -524,6 +526,82 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_m4h2d")
 text = "Main Menu"
 
 [node name="ShopUI" parent="." unique_id=468115205 instance=ExtResource("19_necax")]
+visible = false
 
 [node name="UpgradeManager" type="Node" parent="." unique_id=1560067261]
 script = ExtResource("20_r4lks")
+
+[node name="PauseMenu" type="CanvasLayer" parent="." unique_id=1191262776]
+process_mode = 3
+layer = 10
+script = ExtResource("21_pg34l")
+
+[node name="ColorRect" type="ColorRect" parent="PauseMenu" unique_id=1818625741]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -640.0
+offset_top = -80.0
+offset_right = -600.0
+offset_bottom = -40.0
+grow_horizontal = 2
+scale = Vector2(32.184, 22.04)
+color = Color(0, 0, 0, 0.91764706)
+
+[node name="Label" type="Label" parent="PauseMenu" unique_id=423707760]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -166.0
+offset_top = 213.0
+offset_right = 170.0
+offset_bottom = 269.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0, 0.8976866, 0, 1)
+theme_override_fonts/font = ExtResource("9_b1x3f")
+theme_override_font_sizes/font_size = 56
+text = "PAUSED"
+
+[node name="ResumeButton" type="Button" parent="PauseMenu" unique_id=1300379937]
+process_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -103.0
+offset_top = -20.5
+offset_right = 103.0
+offset_bottom = 20.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("13_7smn1")
+theme_override_colors/font_hover_color = Color(1, 0.07450981, 0.13333334, 1)
+theme_override_styles/normal = SubResource("StyleBoxEmpty_th5th")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_7smn1")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_raeie")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_hxu8e")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_nvumn")
+text = "Resume"
+
+[node name="QuitButton" type="Button" parent="PauseMenu" unique_id=208464396]
+process_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -152.0
+offset_top = 44.0
+offset_right = 153.0
+offset_bottom = 85.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("13_7smn1")
+theme_override_colors/font_hover_color = Color(0.8117647, 0.05882353, 0.10980392, 1)
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ou6is")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_necax")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_r4lks")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_pg34l")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_m4h2d")
+text = "Quit"

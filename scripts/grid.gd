@@ -80,7 +80,7 @@ func disable_quadrant(q: int):
 		if cells[i]:
 			cells[i].modulate = Color(0.6, 0, 0)
 			disabled_cells[i] = true
-	await get_tree().create_timer(5).timeout
+	await get_tree().create_timer(5, false).timeout
 	for i in selected:
 		if cells[i]:
 			cells[i].modulate = Color(1, 1, 1)
@@ -89,7 +89,6 @@ func disable_quadrant(q: int):
 func heal_random_cell():
 	var available := []
 
-	# Collect cells that are NOT disabled
 	for i in range(cells.size()):
 		if not disabled_cells.has(i) and not shop_cell.has(i) and not coin_cell.has(i):
 			available.append(i)
@@ -98,20 +97,14 @@ func heal_random_cell():
 		return
 
 	var chosen = available[randi() % available.size()]
-
-	# Visual feedback (green flash)
 	cells[chosen].modulate = Color(0, 1, 0)
-
-	# Store it temporarily
 	heal_cell[chosen] = "heal"
 
-	await get_tree().create_timer(5).timeout
+	await get_tree().create_timer(5, false).timeout
 
-	# Reset
 	if cells[chosen]:
 		cells[chosen].modulate = Color(1, 1, 1)
 		heal_cell.erase(chosen)
-		
 
 func spawn_coin():
 	var available := []
@@ -132,19 +125,33 @@ func spawn_coin():
 
 	coin_cell[chosen] = coin_sprite
 	print("Coin spawned at:", chosen)
-	
-	# Auto remove after 8 seconds
-	await get_tree().create_timer(8).timeout
+
+	await get_tree().create_timer(8, false).timeout
 	if coin_cell.has(chosen):
 		clear_coin(chosen)
 
 func spawn_coin_loop():
 	while true:
-		await get_tree().create_timer(5).timeout
-		if not shop_paused:
-			spawn_coin()	
-	
-	
+		await get_tree().create_timer(5, false).timeout
+		if not shop_paused and not get_tree().paused:
+			spawn_coin()
+
+func spawn_shop_loop():
+	while true:
+		shop_spawn_timer = get_tree().create_timer(20, false)
+		await shop_spawn_timer.timeout
+
+		if not shop_paused and not get_tree().paused:
+			spawn_shop()
+		
+		
+func clear_shop(index):
+	if shop_cell.has(index):
+		var sprite = shop_cell[index]
+		if is_instance_valid(sprite):
+			sprite.queue_free()
+		shop_cell.erase(index)
+
 func spawn_shop():
 	if not shop_cell.is_empty():
 		print("Shop already exists, skipping spawn")
@@ -169,25 +176,6 @@ func spawn_shop():
 	shop_cell[chosen] = shop_sprite
 	print("Shop spawned at:", chosen)
 	
-
-func spawn_shop_loop():
-	while true:
-		# Wait before spawning next shop
-		shop_spawn_timer = get_tree().create_timer(20)
-		await shop_spawn_timer.timeout
-		
-		# Only spawn if not paused
-		if not shop_paused:
-			spawn_shop()
-		
-		
-func clear_shop(index):
-	if shop_cell.has(index):
-		var sprite = shop_cell[index]
-		if is_instance_valid(sprite):
-			sprite.queue_free()
-		shop_cell.erase(index)
-		
 		
 func clear_coin(index):
 	if coin_cell.has(index):
