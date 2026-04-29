@@ -65,6 +65,7 @@ var charge_has_hit := false
 var audio_laser: AudioStreamPlayer2D
 var audio_charge: AudioStreamPlayer2D
 var audio_slam: AudioStreamPlayer2D
+var hit: AudioStreamPlayer2D
 
 var player_node
 var grid_node
@@ -115,6 +116,12 @@ func _ready():
 	#audio_slam.stream = preload("res://audio/boss_slam.ogg")
 	audio_slam.bus = "SFX"
 	add_child(audio_slam)
+	
+	hit = AudioStreamPlayer2D.new()
+	hit.stream = preload("res://audio/onhit.mp3")
+	hit.bus = "SFX"
+
+	add_child(hit)
 
 	player_node = get_node(player)
 	grid_node = get_node(grid)
@@ -417,6 +424,7 @@ func take_damage(damage: int):
 	
 	health -= damage
 	print("boss health:  ", health)
+	hit.play()
 	if health < 0:
 		health = 0
 	emit_signal("health_changed", health, max_health)

@@ -22,6 +22,7 @@ var shoot_timer := 0.0
 
 var audio_hurt: AudioStreamPlayer
 var audio_coin: AudioStreamPlayer
+var shooting: AudioStreamPlayer
 
 var camera: Camera2D
 var shake_strength := 17.0
@@ -94,6 +95,12 @@ func _ready():
 	audio_coin.volume_db = -5.0
 	audio_coin.bus = "SFX"
 	add_child(audio_coin)
+	
+	shooting = AudioStreamPlayer.new()
+	shooting.stream = preload("res://audio/shooting.wav")
+	shooting.volume_db = -10.0
+	shooting.bus = "SFX"
+	add_child(shooting)
 
 func _input(event):
 	
@@ -161,10 +168,11 @@ func _physics_process(delta):
 	if shoot_timer > 0:
 		shoot_timer -= delta
 
-	
 
 
 func shoot():
+	
+	
 	print("Current firerate: ", shoot_cooldown)
 	if shoot_timer > 0:
 		return
@@ -176,12 +184,13 @@ func shoot():
 	if bullet == null:
 		print("bullet failed to instantiate")
 		return
-
+	
+	
 	bullet.global_position = global_position
 	bullet.direction = (get_global_mouse_position() - global_position).normalized()
 	bullet.damage = bullet_damage
 	get_tree().current_scene.add_child(bullet)
-	
+	shooting.play()
 	shoot_timer = shoot_cooldown
 	
 	
